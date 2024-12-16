@@ -1,0 +1,86 @@
+[
+  {
+    "id": 1,
+    "username": "admin",
+    "password": "123456",
+    "nickname": "千锋教育",
+    "identity": "超级管理员",
+    "gender": "男",
+    "age": 18,
+    "createTime": 1622087544072,
+    "updateTime": 1622289180926,
+    "cart": []
+  },
+  {
+    "id": 2,
+    "username": "guoxiang",
+    "password": "gx123456",
+    "nickname": "前端小灰狼",
+    "identity": "二阶段讲师",
+    "gender": "男",
+    "age": 18,
+    "createTime": 1622087544072,
+    "updateTime": 1622087544072,
+    "cart": []
+  },
+  {
+    "id": 3,
+    "username": "zhangyuning",
+    "password": "zyn123456",
+    "nickname": "贫嘴张大民",
+    "identity": "二阶段讲师",
+    "gender": "男",
+    "age": 59,
+    "createTime": 1622087544072,
+    "updateTime": 1622087544072,
+    "cart": []
+  },
+  {
+    "id": 4,
+    "username": "yanghuaizhi",
+    "password": "yhz123456",
+    "nickname": "公羊无衣",
+    "identity": "二阶段讲师",
+    "gender": "男",
+    "age": 19,
+    "createTime": 1622087544072,
+    "updateTime": 1622087544072,
+    "cart": []
+  },
+  {
+    "id": 5,
+    "username": "liyingli",
+    "password": "lyl123456",
+    "nickname": "码小花",
+    "identity": "一阶段讲师",
+    "gender": "女",
+    "age": 20,
+    "createTime": 1622087544072,
+    "updateTime": 1622087544072,
+    "cart": []
+  },
+  {
+    "id": 6,
+    "username": "liyong",
+    "password": "ly123456",
+    "nickname": "铁牛哥哥",
+    "identity": "一阶段讲师",
+    "gender": "男",
+    "age": 17,
+    "createTime": 1622087544072,
+    "updateTime": 1622532756548,
+    "cart": []
+  },
+  {
+    "id": 7,
+    "username": "lurongtao",
+    "password": "lrt123456",
+    "nickname": "古艺散人",
+    "identity": "三阶段讲师",
+    "gender": "男",
+    "age": 18,
+    "createTime": 1622087544072,
+    "updateTime": 1622087544072,
+    "cart": []
+  }
+]
