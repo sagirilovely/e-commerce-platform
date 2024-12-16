@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="JSHintConfiguration" version="2.13.6" use-config-file="false">
+  <component name="JSHintConfiguration" version="2.13.0" use-config-file="false">
     <option asi="true" />
     <option bitwise="true" />
     <option boss="true" />
@@ -11,7 +11,7 @@
     <option curly="true" />
     <option debug="true" />
     <option devel="true" />
-    <option dojo="false" />
+    <option dojo="true" />
     <option elision="true" />
     <option enforceall="false" />
     <option eqeqeq="true" />
@@ -29,7 +29,7 @@
     <option globalstrict="false" />
     <option immed="true" />
     <option iterator="false" />
-    <option jasmine="false" />
+    <option jasmine="true" />
     <option jquery="true" />
     <option lastsemic="true" />
     <option latedef="false" />
@@ -37,7 +37,7 @@
     <option laxcomma="true" />
     <option loopfunc="true" />
     <option maxerr="50" />
-    <option mocha="false" />
+    <option mocha="true" />
     <option module="true" />
     <option mootools="false" />
     <option moz="true" />
@@ -55,16 +55,16 @@
     <option noyield="true" />
     <option onevar="false" />
     <option passfail="false" />
-    <option phantom="false" />
+    <option phantom="true" />
     <option plusplus="true" />
     <option proto="true" />
-    <option prototypejs="false" />
-    <option qunit="false" />
+    <option prototypejs="true" />
+    <option qunit="true" />
     <option quotmark="false" />
     <option rhino="false" />
     <option scripturl="true" />
     <option shadow="false" />
-    <option shelljs="false" />
+    <option shelljs="true" />
     <option singleGroups="false" />
     <option smarttabs="false" />
     <option strict="true" />

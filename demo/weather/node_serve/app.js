@@ -10,7 +10,7 @@ let weather=require('./routes/weather');
 let almanac=require('./routes/almanac');
 let analysisDream=require('./routes/analysisDream');
 let historyToday=require('./routes/historyToday');
-let location=require('./routes/location');
+let locations=require('./routes/location');
 // 配置ejs
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -34,7 +34,7 @@ app.use('/api/weather',weather)//获取天气
 app.use('/api/historyToday',historyToday)//获取历史上的今天
 app.use('/api/almanac',almanac)//获取黄历
 app.use('/api/analysisDream',analysisDream)//获取解梦
-app.use('/api/location',location)//获取用户地理位置
+app.use('/api/location',locations)//获取用户地理位置
 
 
 // 404页面

@@ -1,16 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="dataSourceStorageLocal" created-in="IU-241.14494.240">
-    <data-source name="sagiri@localhost" uuid="c63af96c-063d-42c9-a111-898b02cf2cc7">
-      <database-info product="Mongo DB" version="8.0.0" jdbc-version="4.2" driver-name="MongoDB JDBC Driver" driver-version="1.18" dbms="MONGO" exact-version="8.0.0" exact-driver-version="1.18" />
-      <case-sensitivity plain-identifiers="mixed" quoted-identifiers="mixed" />
+    <data-source name="@localhost" uuid="0047db82-61c5-47c3-b314-45d0d0b4804d">
+      <database-info product="MySQL" version="8.0.36" jdbc-version="4.2" driver-name="MySQL Connector/J" driver-version="mysql-connector-j-8.2.0 (Revision: 06a1f724497fd81c6a659131fda822c9e5085b6c)" dbms="MYSQL" exact-version="8.0.36" exact-driver-version="8.2">
+        <extra-name-characters>#@</extra-name-characters>
+        <identifier-quote-string>`</identifier-quote-string>
+        <jdbc-catalog-is-schema>true</jdbc-catalog-is-schema>
+      </database-info>
+      <case-sensitivity plain-identifiers="lower" quoted-identifiers="lower" />
       <secret-storage>master_key</secret-storage>
-      <auth-provider>no-auth</auth-provider>
+      <user-name>root</user-name>
       <schema-mapping>
         <introspection-scope>
           <node kind="schema">
+            <name qname="shop_supporter" />
             <name qname="@" />
-            <name qname="mongoDB_test" />
+            <name qname="shop_supporter；" />
           </node>
         </introspection-scope>
       </schema-mapping>
