@@ -13,8 +13,8 @@
       <schema-mapping>
         <introspection-scope>
           <node kind="schema">
-            <name qname="shop_supporter" />
             <name qname="@" />
+            <name qname="shop_supporter" />
             <name qname="shop_supporter；" />
           </node>
         </introspection-scope>
