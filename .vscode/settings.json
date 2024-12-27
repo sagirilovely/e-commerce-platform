@@ -1,0 +1,10 @@
+{
+    "editor.bracketPairColorization.independentColorPoolPerBracketType": true,
+    "editor.bracketPairColorization.enabled": true,
+    "RainbowBrackets.forceUniqueOpeningColor": false,
+    "gutterpreview.imagePreviewMaxHeight": 500,
+    "gutterpreview.imagePreviewMaxWidth": 500,
+    "editor.fontFamily": "JetBrains Mono, MiSans,Inter",
+    "editor.inlineSuggest.fontFamily": "JetBrains Mono",
+    "editor.inlineSuggest.showToolbar": "always"
+}

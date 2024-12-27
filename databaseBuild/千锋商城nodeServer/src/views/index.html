@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <link rel="stylesheet" href="/public/css/index.css">
+</head>
+<body>
+
+  <h1>首 页
+  </h1>
+
+  <div class="container">
+    <p>
+      此服务器中所有数据都是以 <span>json</span> 文件形式保存, 并未连接数据库
+    </p>
+    <p>
+      登录状态 <span>默认</span> 在重启服务器后会消失
+
+      <i> 如果需要重启服务器后登陆状态保持 </i>
+      <i> 请打开 <span>src/conf/config.js</span> 文件 </i>
+      <i> 如果需要重启服务器后登陆状态保持 </i>
+    </p>
+
+    <p>
+      登录状态 <span>默认</span> 会保存 <span>1小时</span>
+      <i>如果需要修改</i>
+      <i>请打开 <span>src/conf/config.js</span> 文件</i>
+      <i>修改 <span>tokenKeep</span> 字段, 单位是 秒(s)</i>
+    </p>
+
+    <p>
+      本服务器对于用户名和密码有默认的验证正则
+      <i>用户名: <span>/^[a-z0-9]\w{4,11}$/</span></i>
+      <i>密码: <span>/\w{6,12}/</span></i>
+      <i>如果需要修改</i>
+      <i>请打开 <span>src/conf/config.js</span> 文件</i>
+      <i>修改 <span>username</span> 和 <span>password</span> 正则</i>
+      <i style="color: red;">注意: 一定要修改为 正则 数据类型, 否则服务器会出现问题</i>
+    </p>
+
+    <p>
+      此服务器默认端口号是 <span>8888</span>
+      <i>如果需要修改</i>
+      <i>请打开 <span>src/package.json</span> 文件</i>
+      <i>修改 <span>start</span> 字段后面的 <span>8888</span></i>
+    </p>
+
+    <p>
+      此服务器所有需要登录后使用的接口
+      <i>均在 <span>请求头</span> 内携带 <span>authorization</span> 字段, 传递 <span>token</span> 值方可</i>
+      <i>登录成功后会在 <span>响应体</span> 内返回 <span>token</span></i>
+    </p>
+  </div>
+
+</body>
+</html>

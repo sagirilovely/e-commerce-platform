@@ -1,0 +1,36 @@
+{
+  "serveConfig": {
+    "host": "localhost",
+    "port": 1010
+  },
+  "originConfig": {
+    "originAllowed": ["http://localhost:63342"]
+  },
+  "databaseConfig": {
+    "host": "localhost",
+    "user": "root",
+    "password": "GWJ#20011008",
+    "database": "shop_supporter",
+    "waitForConnections": true,
+    "connectionLimit": 10,
+    "queueLimit": 0
+  },
+  "authentication": {
+    "secret":"sagiri",
+    "delay": "10000"
+  },
+  "expressStatic": {
+    "isLocal": true,
+    "staticURL":""
+  },
+  "eMailConfig": {
+    "host": "smtp.qq.com",
+    "secureConnection": true,
+    "port": 465,
+    "secure": true,
+    "auth": {
+      "user": "1557112585@qq.com",
+      "pass": "tqsaxvtzpezngjjf"
+    }
+  }
+}

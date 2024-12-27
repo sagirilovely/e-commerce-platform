@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文件上传</title>
+</head>
+<body>
+<h1>文件上传示例</h1>
+
+<!-- 文件上传表单 -->
+<form id="uploadForm">
+    <input type="file" id="fileInput" name="file" accept="image/*" required>
+    <button type="button" id="submitButton">上传文件</button>
+</form>
+
+<!-- 上传结果显示区域 -->
+<div id="result"></div>
+
+<script>
+    // 获取文件输入框和提交按钮
+    const fileInput = document.querySelector('#fileInput');
+    const submitButton = document.querySelector('#submitButton');
+    const resultDiv = document.querySelector('#result');
+
+    // 监听提交按钮点击事件
+    submitButton.addEventListener('click', async () => {
+        const file = fileInput.files[0]; // 获取选中的文件
+
+        if (!file) {
+            alert('请先选择文件!');
+            return;
+        }
+
+        // 创建一个 FormData 对象，用于封装要上传的数据
+        const formData = new FormData();
+        formData.append('file', file); // 'file' 是字段名，file 是文件对象
+
+        try {
+            // 使用 fetch API 上传文件
+            const response = await fetch('/upload', {
+                method: 'POST',
+                body: formData,  // 将 FormData 作为请求体
+            });
+
+            // 解析服务器返回的 JSON 数据
+            const data = await response.json();
+
+            // 如果上传成功
+            if (response.ok) {
+                resultDiv.innerHTML = `<p>上传成功! 文件名: ${data.file.filename}</p>`;
+            } else {
+                resultDiv.innerHTML = `<p>上传失败: ${data.message}</p>`;
+            }
+        } catch (error) {
+            console.error('上传出错:', error);
+            resultDiv.innerHTML = `<p>上传失败，请稍后再试</p>`;
+        }
+    });
+    let newVerifyCode='';
+        for(let i=0;i<6;i++){
+            newVerifyCode=newVerifyCode+String(Math.floor(Math.random()*10));
+
+        }
+</script>
+</body>
+</html>

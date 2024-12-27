@@ -1,0 +1,53 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+h1 {
+  width: 100%;
+  height: 80px;
+  background-color: skyblue;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+h1 > a {
+  margin-left: 100px;
+}
+
+.container {
+  width: 1200px;
+  flex: 1;
+  margin: 10px auto;
+  overflow: auto;
+}
+
+p {
+  line-height: 30px;
+  font-size: 20px;
+  margin: 5px 0;
+}
+
+p span {
+  background-color: #ccc;
+  color: #fff;
+  padding: 5px;
+}
+
+p > i {
+  display: block;
+  padding-left: 30px;
+  margin: 5px 0;
+}

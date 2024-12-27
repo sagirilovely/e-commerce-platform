@@ -1,0 +1,40 @@
+{
+  "name": "e-comerce_platform",
+  "version": "1.0.0",
+  "description": "sagiri' graduation project",
+  "main": "app.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "start": "node src/app.js",
+    "dev": "tsc && node src/app.js"
+  },
+  "keywords": [
+    "node",
+    "express"
+  ],
+  "author": "sagiri",
+  "license": "ISC",
+  "dependencies": {
+    "@types/crypto-js": "^4.2.2",
+    "@types/multer": "^1.4.12",
+    "@types/nodemailer": "^6.4.17",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "crypto-js": "^4.2.0",
+    "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2",
+    "multer": "1.4.5-lts.1",
+    "mysql2": "^3.11.5",
+    "nodemailer": "^6.9.16"
+  },
+  "devDependencies": {
+    "@types/cookie-parser": "^1.4.8",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.0",
+    "@types/jsonwebtoken": "^9.0.7",
+    "@types/node": "^22.10.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.2"
+  }
+}
