@@ -48,7 +48,7 @@ export default {
                     sendEmail(email, '诺,这是你要的验证码', newVerifyCode,host)
                         .then(() => {//发送成功
                             //把验证码加密偷偷塞进cookie里
-                            let encodeVerifyCode = jwt.sign({newVerifyCode: newVerifyCode}, secret, {expiresIn: '300s'});
+                            let encodeVerifyCode = jwt.sign({newVerifyCode: newVerifyCode,usrEmail:email}, secret, {expiresIn: '300s'});
                             res.cookie('newVerifyCode', encodeVerifyCode, {
                                 httpOnly: true,
                                 secure: true,
@@ -74,7 +74,7 @@ export default {
                             res.status(401).send(JSON.stringify({message: '验证码已过期'}))
 
                         } else {
-                            if (decoded.newVerifyCode === verifyCode) {
+                            if ((decoded.newVerifyCode === verifyCode) && (decoded.usrEmail===req.body.userEmail)) {
                                 //验证码验证成功,开始将用户数据写入数据库
                                 if (!req.file) {
                                     return res.status(400).send({message: '头像未上传'});
@@ -96,9 +96,16 @@ export default {
                                         res.status(500).send({message: '注册失败'});
                                     });
                             } else {
-                                res.status(401).send(JSON.stringify({
-                                    message: '验证码错误'
-                                }))
+                                    if(decoded.newVerifyCode !== verifyCode){
+                                        res.status(401).send(JSON.stringify({
+                                            message: '验证码错误'
+                                        }))
+                                    }else{
+                                        res.status(401).send(JSON.stringify({
+                                            message: '邮箱与之前的不一致'
+                                        }))
+                                    }
+
                             }
                         }
                     })
