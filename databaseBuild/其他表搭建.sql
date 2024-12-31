@@ -8,7 +8,8 @@ create table purchasers(
     profile_photo varchar(100),                -- 头像链接
     nickname varchar(20),                      -- 昵称
     receiver_address varchar(100),             -- 收货地址
-    shopping_trolley varchar(100)              -- 购物车内容
+    shopping_trolley varchar(100)   ,           -- 购物车内容
+    preference varchar(100)                    -- 用户偏好
 );
 
 -- 商家信息表

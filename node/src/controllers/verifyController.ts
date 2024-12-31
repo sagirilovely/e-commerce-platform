@@ -127,6 +127,7 @@ export default {
                         const hashPassword:string=createHashPassword(password);
                         if(value===hashPassword){//密码正确
                             setToken(res,email);
+
                             res.status(201).send(JSON.stringify({
                                 message:'登录成功'
                             }))

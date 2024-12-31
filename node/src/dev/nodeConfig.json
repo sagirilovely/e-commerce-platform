@@ -17,7 +17,7 @@
   },
   "authentication": {
     "secret":"sagiri",
-    "delay": "10000"
+    "delay": "1200000"
   },
   "expressStatic": {
     "isLocal": true,
