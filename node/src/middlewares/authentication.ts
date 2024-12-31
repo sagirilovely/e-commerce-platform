@@ -4,6 +4,7 @@ import nodeConfig from '../dev/nodeConfig.js';
 import jwt from 'jsonwebtoken';
 import {NextFunction, Request, Response} from 'express';
 import logger from "../dev/logger.js";
+import setToken from "../util/setToken.js";
 
 // 密钥
 const {secret, delay} = nodeConfig.authentication;
@@ -27,10 +28,11 @@ declare global {
 function verifyToken(req: Request, res: Response, next: NextFunction) {
     // 获取客户端请求的路径
     const requested = req.url.split('/')[1]; // 这里可以拿到 "api/v1/" 后面的部分
-    if (requested === 'users' ||  requested === 'goods') {
+    if (requested === 'verify' ||  requested === 'goods') {
         next();//如果客户端在请求注册或登录,则直接放行
     } else {
         const token = req.cookies['authentication'];//从cookies中取出authentication
+        logger.info("用户带来的token:"+token);
         //由于在此中间件前已经使用了cookieParser,这里cookie是一个对象,可以直接靠.语法取出数据
         //验证token
         jwt.verify(token, secret, (error: jwt.VerifyErrors | null, decoded: any) => {
@@ -45,15 +47,8 @@ function verifyToken(req: Request, res: Response, next: NextFunction) {
                 const remainingTime = (((new Date()).getTime()) - decoded.exp * 1000)
                 //decoded.exp的时间戳是s, js的时间戳是ms
                 if (remainingTime < (parseInt(delay) / 2)) {
-                    //生成一个新的token
-                    const newToken = jwt.sign({userEmail: decoded.userEmail}, secret, {expiresIn: delay});
-                    //写入cookie
-                    res.cookie('authentication', newToken, {
-                        httpOnly: true,
-                        secure: true,
-                        sameSite: 'strict',//当浏览器识别到是本站点时才会返回这个cookie
-                        maxAge: (delay)
-                    })
+                    //往cookie里放新token
+                    setToken(res,decoded.userEmail);
                 }
                 // 通过验证，把用户 userEmail 挂在 res 对象上，并放行
                 res.userEmail = decoded.userEmail;

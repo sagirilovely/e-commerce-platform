@@ -3,7 +3,7 @@
   <component name="SqlDialectMappings">
     <file url="file://$PROJECT_DIR$/databaseBuild/其他表搭建.sql" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/databaseBuild/商品信息表搭建.sql" dialect="MySQL" />
-    <file url="file://$PROJECT_DIR$/node/src/models/usersModel.ts" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/node/src/models/verifyModel.ts" dialect="MySQL" />
     <file url="PROJECT" dialect="MySQL" />
   </component>
 </project>
