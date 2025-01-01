@@ -31,6 +31,7 @@ async function sendPreferenceList(res, preferenceList) {
             preIndex = 0;
         }
         let category = preferenceList[preIndex];
+        logger.info('选取的分类是' + category);
         try {
             const value = await goodsModel.getGoodsData(category, String(randomOffset), '1');
             if (value !== undefined) {
@@ -48,9 +49,9 @@ async function sendPreferenceList(res, preferenceList) {
 }
 export default {
     getGoodsList: (req, res) => {
-        const category = req.body.category;
-        const recommend = req.body.recommend;
-        const offset = req.body.offset;
+        const category = String(req.query.category);
+        const recommend = (req.query.recommend === 'true');
+        const offset = String(req.query.offset);
         const token = req.cookies['authentication'];
         let userEmail = undefined;
         jwt.verify(token, secret, (error, decoded) => {

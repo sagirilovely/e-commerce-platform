@@ -5,7 +5,7 @@ import jwt from "jsonwebtoken";
 import setToken from "../util/setToken.js";
 import configMessage from "../dev/nodeConfig.js";
 const {secret}= configMessage.authentication;
-function sendRandomList(res:Response):void{
+function sendRandomList(res:Response):void{//从数据库中随机选取商品列表发送
     const randomOffset = Math.floor(Math.random() * 900) + 1
     goodsModel.getGoodsData('%',String(randomOffset),'10')
         .then((value)=>{
@@ -22,7 +22,7 @@ function sendRandomList(res:Response):void{
             res.status(500).send(JSON.stringify({message:"没有正常拿到商品列表"}));
         })
 }
-async function sendPreferenceList(res:Response,preferenceList:string[]):Promise<void>{
+async function sendPreferenceList(res:Response,preferenceList:string[]):Promise<void>{//发送基于用户偏好生成的商品列表
 let finalData:object[]=[];
 let preIndex=0;
 while (finalData.length<10){
@@ -30,6 +30,7 @@ while (finalData.length<10){
     preIndex++;
     if(preIndex>preferenceList.length-1){preIndex=0}
     let category=preferenceList[preIndex];
+    logger.info('选取的分类是'+category);
    try{
        const value=await goodsModel.getGoodsData(category,String(randomOffset),'1');
        if(value!==undefined){
@@ -46,9 +47,9 @@ while (finalData.length<10){
 }
 export default {
     getGoodsList:(req:Request,res:Response)=>{
-        const category=req.body.category;
-        const recommend:boolean|undefined=req.body.recommend;
-        const offset = req.body.offset;
+        const category:string =String(req.query.category);
+        const recommend:boolean = (req.query.recommend === 'true');
+        const offset:string = String(req.query.offset);
         const token=req.cookies['authentication'];
         let userEmail:string|undefined=undefined;
         jwt.verify(token, secret, (error: jwt.VerifyErrors | null, decoded: any) => {
