@@ -46,7 +46,8 @@ create table orders(
     refund_reason varchar(200),               -- 退款理由
     is_refund_allowed boolean default false ,  -- 商家是否允许退款
     is_paid  boolean default false ,           -- 用户是否已付款
-    goods_count int not null                   -- 商品数量
+    goods_count int not null  ,                 -- 商品数量
+    created_time datetime  default null         -- 订单创建时间
 );
 
 -- 评论信息表
@@ -56,7 +57,8 @@ create table comments(
     merchant_id int not null,                  -- 商家id
     purchaser_comment varchar(200),            -- 用户评论
     goods_grade int not null,                  -- 商品评分
-    merchant_reply varchar(200)                -- 商家回复
+    merchant_reply varchar(200) ,               -- 商家回复
+    goods_id int not  null                     -- 商品id
 );
 -- 添加一个例子
 insert into purchasers(password,email,created_time,profile_photo,nickname,receiver_address,shopping_trolley,preference) values
@@ -69,12 +71,13 @@ insert into administrators(password,email,created_time,profile_photo,nickname) v
                                                                                    ('4pfOymw0fhSIrIbWBg3z5REAdaQ1/h39Ig+rd2f8tjk=','guowenjie1970@qq.com','2022-01-01','guowenjie1970@qq.com.png','sagiri');
 -- 添加一个例子
 insert into orders(goods_id,purchaser_id,merchant_id,receiver_address,logistics_information,is_take_delivery,
-                   is_refund,refund_reason,is_refund_allowed,is_paid,goods_count) values(1,1,1,'{"country":"中国",
+                   is_refund,refund_reason,is_refund_allowed,is_paid,goods_count,created_time) values(1,1,1,'{"country":"中国",
 "province":"江西",
-"city":"赣州","detail":"xx县xx区"}','正在揽收',false,false,'123',false,false,0);
+"city":"赣州","detail":"xx县xx区"}','正在揽收',false,false,'123',false,false,0,'2022-01-01');
 -- 添加一个例子
-insert into comments(purchaser_id,merchant_id,purchaser_comment,goods_grade,merchant_reply) values(1,1,'商品很好敏感肌也能用',3,
-                                                                                                   '感谢评价支持!');
+insert into comments(purchaser_id,merchant_id,purchaser_comment,goods_grade,merchant_reply,goods_id) values(1,1,
+                                                                                                      '商品很好敏感肌也能用',3,
+                                                                                                   '感谢评价支持!','1');
 -- 为已有表添加外键约束
 ALTER TABLE orders
 ADD CONSTRAINT fk_orders_goods 

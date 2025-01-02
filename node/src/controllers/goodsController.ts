@@ -30,7 +30,6 @@ while (finalData.length<10){
     preIndex++;
     if(preIndex>preferenceList.length-1){preIndex=0}
     let category=preferenceList[preIndex];
-    logger.info('选取的分类是'+category);
    try{
        const value=await goodsModel.getGoodsData(category,String(randomOffset),'1');
        if(value!==undefined){
@@ -60,14 +59,12 @@ export default {
             }
         });
         if(recommend){
-            logger.info('走到了recommend===true分支.userEmail:'+userEmail)
             if(userEmail){//存在,说明是已经登录的用户
                 //从用户数据库中查找用户的偏好分类
                 goodsModel.getUserPreference(userEmail)
                     .then((value)=>{
                         if(value){//value是一个字符串,由逗号隔开用户喜好的分类
                             const preferenceList:string[]=value.split(',');
-                            logger.info('preferenceList:'+preferenceList);
                             sendPreferenceList(res,preferenceList)
                         }else{//还没收集到该用户的偏好,随机返回点商品
                             sendRandomList(res)
@@ -79,7 +76,6 @@ export default {
 
         }else{
             //查询某个分类的商品
-            logger.info('正在查询'+category);
             goodsModel.getGoodsData(category,offset,'10')
                 .then((value)=>{
                     if(value===undefined){

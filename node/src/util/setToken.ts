@@ -12,5 +12,4 @@ export default function setToken (res: Response,email:string):void{
         sameSite: 'strict',//当浏览器识别到是本站点时才会返回这个cookie
         maxAge: (delay)
     })
-    logger.info('成功写入token:'+newToken);
 }

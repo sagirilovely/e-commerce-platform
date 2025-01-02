@@ -1,40 +1,15 @@
 import verifyModel from "../models/verifyModel.js";
-import createVerifyCode from "../util/createVerifyCode.js";
 import jwt from 'jsonwebtoken';
 import configMessage from "../dev/nodeConfig.js";
-import sendEmail from "../util/sendEmail.js";
 import createHashPassword from "../util/createHashPassword.js";
 import path from "path";
 import setToken from "../util/setToken.js";
+import sendNewCode from "../util/sendNewCode.js";
 const saveUserInformation = verifyModel.saveUserInformation;
 const getHashPassword = verifyModel.getHashPassword;
 const { secret } = configMessage.authentication;
 const { host } = configMessage.serveConfig;
 const { staticURL } = configMessage.expressStatic;
-function sendNewCode(req, res, email) {
-    //生成一个验证码
-    const newVerifyCode = createVerifyCode(6);
-    //发送验证码
-    sendEmail(email, '诺,这是你要的验证码', newVerifyCode, host)
-        .then(() => {
-        //把验证码加密偷偷塞进cookie里
-        let encodeVerifyCode = jwt.sign({ newVerifyCode: newVerifyCode, userEmail: email }, secret, { expiresIn: '300s' });
-        res.cookie('newVerifyCode', encodeVerifyCode, {
-            httpOnly: true,
-            secure: true,
-            sameSite: 'strict', //当浏览器识别到是本站点时才会返回这个cookie
-            maxAge: 300000
-        });
-        res.status(200).send(JSON.stringify({
-            message: '验证码已发送'
-        }));
-    })
-        .catch(() => {
-        res.status(500).send(JSON.stringify({
-            message: '验证码发送失败,可能是邮箱有误'
-        }));
-    });
-}
 export default {
     //用户注册
     createUser: (req, res, next) => {

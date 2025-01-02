@@ -32,7 +32,6 @@ function verifyToken(req: Request, res: Response, next: NextFunction) {
         next();//如果客户端在请求注册或登录,则直接放行
     } else {
         const token = req.cookies['authentication'];//从cookies中取出authentication
-        logger.info("用户带来的token:"+token);
         //由于在此中间件前已经使用了cookieParser,这里cookie是一个对象,可以直接靠.语法取出数据
         //验证token
         jwt.verify(token, secret, (error: jwt.VerifyErrors | null, decoded: any) => {

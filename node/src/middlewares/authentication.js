@@ -2,7 +2,6 @@
 import nodeConfig from '../dev/nodeConfig.js';
 // 导入 jwt 模块
 import jwt from 'jsonwebtoken';
-import logger from "../dev/logger.js";
 import setToken from "../util/setToken.js";
 // 密钥
 const { secret, delay } = nodeConfig.authentication;
@@ -20,7 +19,6 @@ function verifyToken(req, res, next) {
     }
     else {
         const token = req.cookies['authentication']; //从cookies中取出authentication
-        logger.info("用户带来的token:" + token);
         //由于在此中间件前已经使用了cookieParser,这里cookie是一个对象,可以直接靠.语法取出数据
         //验证token
         jwt.verify(token, secret, (error, decoded) => {

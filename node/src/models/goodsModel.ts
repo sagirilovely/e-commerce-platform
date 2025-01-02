@@ -21,7 +21,7 @@ export default {
              limit ? , ? `,
       [category, offset, count]
     );
-    logger.info("数据库查到的rows:" + JSON.stringify(rows[0]));
+
     if (Array.isArray(rows) && rows.length > 0) {
       return rows;
     } else {
