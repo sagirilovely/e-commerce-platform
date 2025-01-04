@@ -23,6 +23,11 @@ export default {
                     return undefined;
                 }
             })
+            .catch((err)=>{
+                res.status(500).send(JSON.stringify({
+                    "message":"没正常拿到该商品信息"
+                }))
+            })
             .then((merchantNikeName)=>{
                 if(merchantNikeName){
                     Object.assign(goodsDetailFinal,{merchant_nikename:merchantNikeName});
