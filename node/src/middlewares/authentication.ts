@@ -18,7 +18,7 @@ declare global {
     }
 }
 
-//若客户端向 /register /goods /login 请求则直接放行
+//若客户端向 /verify /goods  请求则直接放行
 // 否则进入token验证环节
 // 先从cookie拿出token
 // 放入verify验证,通过则放行,并把用户userEmail挂在res上方便后面的中间件直接拿;并更新token的时间

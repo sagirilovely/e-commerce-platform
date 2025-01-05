@@ -4,10 +4,10 @@ export default {
     getUserId: async (userEmail) => {
         try {
             const [rows] = await promisePool.execute(`
-                select purchaser_id, receiver_address
-                from purchasers
-                where email = ?
-            `, [userEmail]);
+                    select purchaser_id, receiver_address
+                    from purchasers
+                    where email = ?
+                `, [userEmail]);
             if (Array.isArray(rows) && rows.length > 0) {
                 return JSON.stringify({
                     purchaser_id: rows[0]["purchaser_id"],
@@ -25,10 +25,10 @@ export default {
     getGoodsMerchantId: async (goodsId) => {
         try {
             const [rows] = await promisePool.execute(`
-                select merchant_id
-                from products
-                where goods_id = ?
-            `, [goodsId]);
+                    select merchant_id
+                    from products
+                    where goods_id = ?
+                `, [goodsId]);
             if (Array.isArray(rows) && rows.length > 0) {
                 return rows[0]["merchant_id"];
             }
@@ -43,10 +43,11 @@ export default {
     createOrder: async (goods_id, goods_count, purchaser_id, merchant_id, receiver_address, created_time) => {
         try {
             const [rows] = await promisePool.execute(`
-                insert into orders (goods_id, goods_count, purchaser_id, merchant_id, receiver_address, created_time,
-                                    logistics_information)
-                values (?, ?, ?, ?, ?, ?, ?)
-            `, [
+                    insert into orders (goods_id, goods_count, purchaser_id, merchant_id, receiver_address,
+                                        created_time,
+                                        logistics_information)
+                    values (?, ?, ?, ?, ?, ?, ?)
+                `, [
                 goods_id,
                 goods_count,
                 purchaser_id,
@@ -70,10 +71,10 @@ export default {
     paidOrder: async (is_paid, order_id) => {
         try {
             const [rows] = await promisePool.execute(`
-                select is_paid
-                from orders
-                where order_id = ?;
-            `, [order_id]);
+                    select is_paid
+                    from orders
+                    where order_id = ?;
+                `, [order_id]);
             if (rows[0].is_paid === 1 || rows[0].is_paid === true) {
                 logger.info("订单重复支付");
                 return false;
@@ -88,10 +89,10 @@ export default {
                 is_paid = is_paid === "true";
             }
             const [rows] = await promisePool.execute(`
-                update orders
-                set is_paid = ?
-                where order_id = ?;
-            `, [is_paid, order_id]);
+                    update orders
+                    set is_paid = ?
+                    where order_id = ?;
+                `, [is_paid, order_id]);
             return rows.affectedRows > 0;
         }
         catch (err) {
@@ -105,11 +106,11 @@ export default {
         }
         try {
             const [rows] = await promisePool.execute(`
-                update orders
-                set is_refund     = ?,
-                    refund_reason = ?
-                where order_id = ?
-            `, [is_refund, refund_reason, order_id]);
+                    update orders
+                    set is_refund     = ?,
+                        refund_reason = ?
+                    where order_id = ?
+                `, [is_refund, refund_reason, order_id]);
             return rows.affectedRows > 0;
         }
         catch (err) {
@@ -120,10 +121,10 @@ export default {
     takeDelivery: async (is_take_delivery, order_id) => {
         try {
             const [rows] = await promisePool.execute(`
-                update orders
-                set is_take_delivery = ?
-                where order_id = ?
-            `, [is_take_delivery, order_id]);
+                    update orders
+                    set is_take_delivery = ?
+                    where order_id = ?
+                `, [is_take_delivery, order_id]);
             return rows.affectedRows > 0;
         }
         catch (err) {
@@ -139,19 +140,19 @@ export default {
             let detailResult = {};
             let goods_id;
             let [rows] = await promisePool.execute(`
-                select
-                  order_id,goods_id,
-                       goods_count,
-                       created_time,
-                       receiver_address,
-                       logistics_information,
-                       is_take_delivery,
-                       is_refund,
-                       is_refund_allowed,
-                       is_paid
-                from orders
-                where order_id = ?;
-            `, [order_id]);
+                    select order_id,
+                           goods_id,
+                           goods_count,
+                           created_time,
+                           receiver_address,
+                           logistics_information,
+                           is_take_delivery,
+                           is_refund,
+                           is_refund_allowed,
+                           is_paid
+                    from orders
+                    where order_id = ?;
+                `, [order_id]);
             if (Array.isArray(rows) && rows.length > 0) {
                 goods_id = rows[0].goods_id;
                 for (let key in rows[0]) {
@@ -186,4 +187,44 @@ export default {
             return undefined;
         }
     },
+    getOrderSummary: async (userEmail) => {
+        try {
+            //通过userEmail获取purchaser_id
+            const purchaser_id = (await promisePool.execute(`
+                select purchaser_id
+                from purchasers
+                where email = ? ;
+            `, [userEmail]))[0][0].purchaser_id;
+            //通过purchaser_id获取该用户的所有订单
+            const [rows] = await promisePool.execute(`
+                select order_id,created_time,is_take_delivery,goods_count,is_refund,is_refund_allowed,is_paid,goods_id
+                from orders
+                where purchaser_id = 1 ;
+            `);
+            let orderSummaryList = rows;
+            let productIdList = [];
+            for (let order of orderSummaryList) {
+                productIdList.push(order.goods_id);
+            }
+            const result = await promisePool.execute(`
+                select title,img_big_logo,current_price,goods_id
+             from products
+                where goods_id in (${productIdList.join(',')})
+            `);
+            let goodsList = result[0];
+            for (let orderSummary of orderSummaryList) {
+                for (let goods of goodsList) {
+                    if (orderSummary.goods_id === goods.goods_id) {
+                        Object.assign(orderSummary, goods);
+                        delete orderSummary.goods_id;
+                    }
+                }
+            }
+            return orderSummaryList;
+        }
+        catch (err) {
+            logger.error("getOrderSummary:" + err);
+            return undefined;
+        }
+    }
 };

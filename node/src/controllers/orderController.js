@@ -1,4 +1,5 @@
 import orderModel from "../models/orderModel.js";
+import logger from "../dev/logger.js";
 export default {
     createOrder: async (req, res) => {
         const goods_id = req.body.goods_id;
@@ -148,6 +149,28 @@ export default {
                 return;
             }
         }).catch((err) => {
+            res.status(500).json({ message: "服务器出错" });
+        });
+    },
+    getOrderSummary: (req, res) => {
+        const userEmail = res.userEmail;
+        if (!userEmail) {
+            res.status(403).json({ message: "获取订单列表失败" });
+            return;
+        }
+        orderModel.getOrderSummary(userEmail)
+            .then((value) => {
+            if (!value) {
+                res.status(403).json({ message: "获取订单列表失败" });
+                return;
+            }
+            res.status(200).json({
+                message: "获取订单列表成功",
+                data: value
+            });
+        })
+            .catch((err) => {
+            logger.error(err);
             res.status(500).json({ message: "服务器出错" });
         });
     }
