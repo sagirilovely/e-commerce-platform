@@ -1,5 +1,6 @@
 import orderModel from "../models/orderModel.js";
 import { Request, Response } from "express";
+import logger from "../dev/logger.js";
 
 export default {
   createOrder: async (req: Request, res: Response) => {
@@ -111,24 +112,48 @@ export default {
       });
   },
   deliveryOrder: (req: Request, res: Response) => {
-    const order_id= req.body.order_id;
+    const order_id = req.body.order_id;
     let is_take_delivery: string | boolean = req.body.is_take_delivery;
     if (!is_take_delivery || !order_id) {
-      res.status(403).json({ message: "确认收货失败" });return;
+      res.status(403).json({ message: "确认收货失败" });
+      return;
     }
     if (typeof is_take_delivery === "string") {
       is_take_delivery = is_take_delivery === "true";
     }
-    orderModel.takeDelivery(is_take_delivery, order_id)
-        .then((value) => {
-          if (value) {
-            res.status(200).json({ message: "确认收货成功" });
-          }else{
-            res.status(403).json({ message: "确认收货失败" });
-          }
-        }).catch((err)=>{
-          res.status(500).json({ message: "服务器出错" });
+    orderModel
+      .takeDelivery(is_take_delivery, order_id)
+      .then((value) => {
+        if (value) {
+          res.status(200).json({ message: "确认收货成功" });
+        } else {
+          res.status(403).json({ message: "确认收货失败" });
+        }
+      })
+      .catch((err) => {
+        res.status(500).json({ message: "服务器出错" });
+      });
+  },
+  getOrderDetail:(req:Request,res:Response)=>{
+    let order_id=String(req.query.order_id);
+    const userEmail=res.userEmail;
+    if(!order_id || !userEmail){
+      res.status(403).json({message:"获取订单详情失败"});
+      return;
+    }
+    orderModel.getOrderDetail(order_id)
+    .then((value)=>{
+      if(!value){
+        res.status(403).json({message:"获取订单详情失败"});return;
+      }else{
+        res.status(200).json({
+          message:"获取订单详情成功",
+          data:JSON.parse(value)
+        })
+        return;
+      }
+    }).catch((err)=>{
+      res.status(500).json({message:"服务器出错"})
     })
-
-}
+  }
 };
