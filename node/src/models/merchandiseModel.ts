@@ -13,7 +13,7 @@ export default {
               `
             select goods_id,
                    title,
-                   img_small_logo,
+                   img_big_logo,
                    price,
                    current_price,
                    goods_number,

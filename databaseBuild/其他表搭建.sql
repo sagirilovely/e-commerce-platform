@@ -78,24 +78,6 @@ insert into orders(goods_id,purchaser_id,merchant_id,receiver_address,logistics_
 insert into comments(purchaser_id,merchant_id,purchaser_comment,goods_grade,merchant_reply,goods_id) values(1,1,
                                                                                                       '商品很好敏感肌也能用',3,
                                                                                                    '感谢评价支持!','1');
--- 为已有表添加外键约束
-ALTER TABLE orders
-ADD CONSTRAINT fk_orders_goods 
-    FOREIGN KEY (goods_id) REFERENCES products(goods_id),
-ADD CONSTRAINT fk_orders_purchaser
-    FOREIGN KEY (purchaser_id) REFERENCES purchasers(purchaser_id),
-ADD CONSTRAINT fk_orders_merchant
-    FOREIGN KEY (merchant_id) REFERENCES merchants(merchant_id);
-
-ALTER TABLE comments
-ADD CONSTRAINT fk_comments_purchaser
-    FOREIGN KEY (purchaser_id) REFERENCES purchasers(purchaser_id),
-ADD CONSTRAINT fk_comments_merchant
-    FOREIGN KEY (merchant_id) REFERENCES merchants(merchant_id);
-
-ALTER TABLE products
-ADD CONSTRAINT fk_products_merchant
-    FOREIGN KEY (merchant_id) REFERENCES merchants(merchant_id);
 
 -- 为了保证数据完整性,建议添加以下索引
 ALTER TABLE orders

@@ -1,7 +1,7 @@
 import promisePool from "./dbPool.js";
 export default {
     getGoodsData: async (category, offset, count) => {
-        let [rows] = await promisePool.execute(`select goods_id, title, img_big_logo, current_price
+        let [rows] = await promisePool.execute(`select goods_id, title, img_small_logo, current_price
              from products
              where category like ?
              limit ? , ? `, [category, offset, count]);

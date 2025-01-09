@@ -7,32 +7,38 @@ import createHashPassword from "../util/createHashPassword.js";
 const { secret } = configMessage.authentication;
 export default {
     updateUserTrolley: (req, res) => {
-        const goods_id = req.body.goods_id;
-        const goods_count = req.body.goods_count;
-        const userEmail = res.userEmail;
-        if (!(goods_id) || !(goods_count) || !(userEmail)) {
-            res.status(500).json({ message: "放入购物车失败" });
-            return;
-        }
-        userModel.updateUserTrolley(userEmail, goods_id, goods_count)
-            .then((value) => {
-            if (value) {
-                res.status(200).json({
-                    message: "商品已放入购物车"
-                });
+        try {
+            const goods_obj = req.body.goods_obj;
+            const userEmail = res.userEmail;
+            if (!userEmail) {
+                res.status(500).json({ message: "更新失败" });
+                return;
             }
-            else {
+            for (let key in goods_obj) {
+                goods_obj[key] = String(goods_obj[key]);
+            }
+            userModel.updateUserTrolley(userEmail, goods_obj)
+                .then((value) => {
+                if (value) {
+                    res.status(200).json({
+                        message: "成功更新购物车",
+                    });
+                }
+                else {
+                    res.status(500).json({
+                        message: "更新失败"
+                    });
+                }
+            }).catch((err) => {
                 res.status(500).json({
-                    message: "放入购物车失败"
+                    message: "更新失败"
                 });
-            }
-        })
-            .catch((err) => {
-            logger.error(err);
-            res.status(500).json({
-                message: "放入购物车失败"
             });
-        });
+        }
+        catch (err) {
+            logger.error("购物车更新失败" + err);
+            res.status(500).json({ message: "更新失败" });
+        }
     },
     getUserTrolley: (req, res) => {
         const userEmail = res.userEmail;
@@ -165,7 +171,7 @@ export default {
                 return;
             }
             if (error) {
-                res.status(401).json({
+                res.status(403).json({
                     message: "验证码错误或过期"
                 });
                 return;

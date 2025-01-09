@@ -10,14 +10,17 @@ import verifyToken from './middlewares/authentication.js';
 import configMessage from './dev/nodeConfig.js';
 //引入日志记录模块
 import logger from "./dev/logger.js";
+//解决前端history模式地址问题
+import history from 'connect-history-api-fallback';
 //引入主路由器
 import routers from "./routers/index.js";
 const { host, port } = configMessage.serveConfig;
 const { originAllowed } = configMessage.originConfig;
 //express构建app
 let app = express();
+//解决history模式地址问题
+app.use(history());
 //配置静态资源
-//拿到静态资源的绝对路径
 let publicPath = configMessage.expressStatic.staticURL;
 app.use('/public', express.static(publicPath));
 //处理json格式的数据

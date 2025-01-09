@@ -4,30 +4,30 @@ import {ResultSetHeader, RowDataPacket} from "mysql2";
 import path from "path";
 
 export default {
-    updateUserTrolley: async (userEmail: string,goods_id:string,goods_count:string):Promise<boolean|undefined> => {
+    updateUserTrolley: async (userEmail:string,goods_obj:object):Promise<boolean|undefined> => {
         try {
-            //通过邮箱查询到用户的购物车信息
-            const [rows] =await promisePool.execute<RowDataPacket[]>(`select shopping_trolley
-                                                from purchasers
-                                                where email = ?`, [userEmail])
-            if(rows.length===0){
-                return false;
-            }
-            const userTrolley = JSON.parse(rows[0].shopping_trolley);
-            if(userTrolley[goods_id]){
-                userTrolley[goods_id]=String(parseInt(goods_count)+parseInt(userTrolley[goods_id]));
-            }else{
-                userTrolley[goods_id]=goods_count;
-            }
-            try{
-                const [rows] = await promisePool.execute<ResultSetHeader>(`update purchasers
-                                                    set shopping_trolley = ?
-                                                    where email = ?`, [JSON.stringify(userTrolley), userEmail])
-                return rows.affectedRows === 1;
-            }catch (err){
-                logger.info('getUserTrolley' + err);
-                return false;
-            }
+                let [userTrolley]=await promisePool.execute<RowDataPacket[]>(`
+                    select shopping_trolley from purchasers
+                    where email = ?;
+                `,[userEmail]);
+                if (Array.isArray(userTrolley) && userTrolley.length > 0) {
+                    let Trolley_obj = JSON.parse(userTrolley[0]["shopping_trolley"]);
+                    Object.assign(Trolley_obj,goods_obj);
+                    for(let key in Trolley_obj){
+                       if(Trolley_obj[key]=="0"){
+                           delete Trolley_obj[key];
+                       }
+                    }
+                    let trolley_string=JSON.stringify(Trolley_obj);
+                    let [rows] = await promisePool.execute<ResultSetHeader>(`
+                        update purchasers
+                        set shopping_trolley = ?
+                        where email = ?;
+                    `,[trolley_string,userEmail])
+                    return rows.affectedRows === 1;
+                }else{
+                    return false;
+                }
         }catch (err) {
             logger.info('getUserTrolley' + err);
             return false;

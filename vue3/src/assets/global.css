@@ -1,0 +1,11 @@
+html{
+    font-size: 0.13333vw;
+    font-family: "MiSans","Microsoft YaHei", "微软雅黑", "黑体", "宋体", sans-serif;
+    height: 100%;
+    width: 100%;
+}
+body{
+    font-size: 16rem;
+    height: 100%;
+    width: 100%;
+}

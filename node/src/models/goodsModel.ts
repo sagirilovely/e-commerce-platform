@@ -15,7 +15,7 @@ export default {
     count: string
   ): Promise<object | undefined> => {
     let [rows] = await promisePool.execute<(Goods & RowDataPacket)[]>(
-      `select goods_id, title, img_big_logo, current_price
+      `select goods_id, title, img_small_logo, current_price
              from products
              where category like ?
              limit ? , ? `,
