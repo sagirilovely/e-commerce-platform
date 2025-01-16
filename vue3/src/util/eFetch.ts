@@ -1,49 +1,57 @@
-//封装一个fetch,处理收到status401
-//思路:
-//其他页面中调用此处封装好的fetch
-//由这里的代码负责检查status是否为401
-//若为401,则将pinia中的状态置false;此时用户如果在非登录注册页,则router跳转到登录页;reject()
-// 否则 pinia中的状态为true;返回res.json()
-
-//pinia中每次都应该将状态放入local中,每次从local中取值初始化
-
-//在路由守卫中也加一道保险:如果用户正要前往非登录注册页面,则应该检查pinia中的状态
-//若状态为false,则跳至登录页
-//若状态为true,则next()
+import useVerify from '@/stores/useVerify.ts'
 interface eFetchData{
-  status:number,
-  data:object
-}
-function changeAuthenticated(isAuthenticated:boolean):void{
-    //todo:更新pinia中的状态
+  status:number;
+  message:string;
+  data:object | object[]
 }
 
-function eFetch(url:string,options:RequestInit):Promise<eFetchData>{
-  return(
-   fetch(url,options)
-     .then((res)=>{
-       if(res.status===401){
-          changeAuthenticated(false);
-         //todo:router跳转到登录页:
-
-
-         return Promise.reject({
-           message:'鉴权失败'
-         })
-       }else{
-         changeAuthenticated(true);
-         return (res.json().then((data)=>{return{
-           status:res.status,
-           data:data
-         }}));
-       }
-     })
-     .catch((error)=>{
-       console.error('Fetch Error:', error);
-       return Promise.reject({
-         message:"请求出错"
-       });
-     })
-  )
+/**
+ * 执行网络请求并处理响应数据:并更新 pinia验证状态 与 本地验证状态
+ * 使用fetch API进行网络请求，并对请求参数和响应数据进行统一处理
+ *
+ * @param httpUrl 请求的URL地址
+ * @param httpMethod HTTP请求方法，如GET、POST等
+ * @param httpBody 请求体内容，将被序列化为JSON格式
+ * @returns 返回一个Promise，解析为包含请求状态、消息和数据的对象
+ */
+function eFetch(httpUrl:string,httpMethod:string,httpBody?:object):Promise<eFetchData>{
+  const options:{
+    method:string,
+    headers?:object,
+    body?:string|object,
+    credentials:RequestCredentials
+  }={
+    method:httpMethod,
+    headers:{
+      'Content-Type':'application/json',
+    },
+    credentials:'include'
+  }
+  if (httpMethod !== 'GET') {
+    options.body = JSON.stringify(httpBody);
+    // 打印请求信息
+    console.log('##options'+options)
+  }
+  const httpData:eFetchData={status:0,message:'',data:{}};
+  return fetch(('http://localhost:1010/api/v1'+httpUrl),<object>options)
+    .then((res)=>{
+      httpData.status=res.status;
+      useVerify().isPassVerify=!(httpData.status===401);
+      localStorage.setItem('isPassVerify',String(useVerify().isPassVerify))
+      return res.json();
+    })
+    .then((res)=>{
+      httpData.message=res.message;
+      httpData.data=res.data;
+      return httpData;
+    })
+    .catch(()=>{
+      useVerify().isPassVerify=false;
+      httpData.status=500;
+      httpData.message='网络错误';
+      httpData.data={};
+      return Promise.reject(httpData)
+    })
 }
+
 export default eFetch;

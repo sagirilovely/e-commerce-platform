@@ -31,12 +31,28 @@ const {originAllowed} = configMessage.originConfig;
 //express构建app
 let app = express();
 
-//解决history模式地址问题
-app.use(history());
+
+// 使用cors模块解决跨域
+app.use('/',cors({
+    origin: (origin:string|undefined, callback) => {
+        if (originAllowed.includes(origin) || !origin) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    methods: [  'GET','POST','PUT', 'DELETE'], // 允许的 HTTP 方法
+    allowedHeaders: ['Content-Type', 'authentication','credentials'], // 允许的请求头
+    credentials: true, // 是否允许发送凭证（如 Cookies）
+}))
+
+
 
 //配置静态资源
 let publicPath: string = configMessage.expressStatic.staticURL;
 app.use('/public', express.static(publicPath));
+
+
 
 //处理json格式的数据
 app.use(express.json());
@@ -46,24 +62,14 @@ app.use(express.urlencoded({extended: true}));
 app.use(cookieParser());
 
 
-//使用cors模块解决跨域
-app.use(cors({
-    origin: (origin:string|undefined, callback) => {
-        if (originAllowed.includes(origin) || !origin) {
-            callback(null, true);
-        } else {
-            callback(new Error('Not allowed by CORS'));
-        }
-    },
-    methods: ['GET', 'POST', 'PUT', 'DELETE'], // 允许的 HTTP 方法
-    allowedHeaders: ['Content-Type', 'authentication'], // 允许的请求头
-    credentials: true, // 是否允许发送凭证（如 Cookies）
-}))
 
 //进入token验证中间件
 app.use('/api/v1',verifyToken);
 //进入index.js主路由器
 app.use('/api/v1', routers)
+
+//解决history模式地址问题
+app.use(history());
 
 //错误处理中间件
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {

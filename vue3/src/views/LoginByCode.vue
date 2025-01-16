@@ -1,11 +1,8 @@
 <template>
-<div>
-  LoginBycode
-</div>
+
 </template>
-<script setup lang="ts">
+<script lang="ts" setup>
+import { ref } from 'vue';
 
 </script>
-<style scoped>
 
-</style>

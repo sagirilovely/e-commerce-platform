@@ -9,7 +9,7 @@ export default function setToken (res: Response,email:string):void{
     res.cookie('authentication', newToken, {
         httpOnly: true,
         secure: true,
-        sameSite: 'strict',//当浏览器识别到是本站点时才会返回这个cookie
+        sameSite: 'none',//当浏览器识别到是本站点时才会返回这个cookie
         maxAge: (delay)
     })
 }

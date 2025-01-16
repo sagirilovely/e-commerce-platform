@@ -4,7 +4,7 @@
     "port": 1010
   },
   "originConfig": {
-    "originAllowed": ["http://localhost:63342"]
+    "originAllowed": ["http://localhost:5173"]
   },
   "databaseConfig": {
     "host": "localhost",

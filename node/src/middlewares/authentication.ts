@@ -37,10 +37,11 @@ function verifyToken(req: Request, res: Response, next: NextFunction) {
         jwt.verify(token, secret, (error: jwt.VerifyErrors | null, decoded: any) => {
             if (error) {
                 if (!token) {
-                    return res.status(401).send({message: '未提供Token'});
+                    console.log('未提供Token')
+                    return res.status(401).json({message: '未提供Token'});
                 }
                 //事实上,cookie与token设置的是同一个时间长度,根本不存在有token但无效的情况
-                return res.status(401).send({message: 'Token无效或已过期'});
+                return res.status(401).json({message: 'Token无效或已过期'});
             } else {
                 //拿到上一次token的时间戳与当前时间戳,得到剩余天数,若小于delay/2则生成新token
                 const remainingTime = (((new Date()).getTime()) - decoded.exp * 1000)
