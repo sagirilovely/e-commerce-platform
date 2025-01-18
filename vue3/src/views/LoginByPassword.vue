@@ -30,6 +30,9 @@
 </template>
 
 <script lang="ts" setup>
+defineOptions({
+  name: 'LoginByPassword'
+})
 import { CloseOutlined, EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons-vue'
 import { onMounted, ref } from 'vue'
 import { message } from 'ant-design-vue'

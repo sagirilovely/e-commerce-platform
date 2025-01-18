@@ -26,11 +26,20 @@
       />
     </div>
     <div class="verifyRight">
-      <router-view></router-view>
+
+      <router-view v-slot="{ Component }">
+          <keep-alive>
+            <component :is="Component" />
+          </keep-alive>
+      </router-view>
+
     </div>
   </div>
 </template>
 <script setup lang="ts">
+defineOptions({
+  name: 'VerifyPage'
+})
 import backgroundImg from '../assets/imgs/verifyBackground.jpg'
 import router from '@/router'
 import type { AnchorProps } from 'ant-design-vue';

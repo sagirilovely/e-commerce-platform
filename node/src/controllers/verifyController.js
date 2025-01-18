@@ -18,7 +18,7 @@ export default {
         //向数据库查询,该邮箱是否存在
         verifyModel.isEmailExist(email)
             .then((value) => {
-            if (!value) {
+            if (value) {
                 //邮箱已存在,用户应当直接去登录
                 res.status(409).send(JSON.stringify({
                     message: '账号已存在',
@@ -115,14 +115,24 @@ export default {
         }
     },
     //用户使用账号验证码登录
-    loginByCode: (req, res) => {
+    loginByCode: async (req, res) => {
         const email = req.body.userEmail;
         const bodyCode = req.body.verifyCode;
         const cookieCode = req.cookies.newVerifyCode;
-        if (!bodyCode && !cookieCode) { //用户是要一个验证码,接下来应该发送一个验证码
+        let isGetCode = req.body.isGetCode;
+        isGetCode = (isGetCode === 'true');
+        const isEmailExist = await verifyModel.isEmailExist(email);
+        if (!isEmailExist) {
+            res.status(401).json({
+                message: '该邮箱还未注册'
+            });
+            return;
+        }
+        if (isGetCode) { //用户是要一个验证码,接下来应该发送一个验证码
+            console.log('发送验证码');
             sendNewCode(req, res, email);
         }
-        if (bodyCode && cookieCode) { //用户已经拿到了验证码,接下来进行验证
+        else { //用户已经拿到了验证码,接下来进行验证
             jwt.verify(cookieCode, secret, (error, decoded) => {
                 if (error) {
                     //cookie里有但过期
@@ -142,16 +152,6 @@ export default {
                     }
                 }
             });
-        }
-        if (bodyCode && !cookieCode) { //用户还没拿到验证码
-            res.status(401).send(JSON.stringify({
-                message: '系统还未发送验证码'
-            }));
-        }
-        if (!bodyCode && cookieCode) { //用户拿到了一个验证码,但提交的是空的验证码
-            res.status(401).send(JSON.stringify({
-                message: '验证码错误'
-            }));
         }
     }
 };

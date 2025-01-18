@@ -1,5 +1,6 @@
 <template>
   <div>
+<!--    主题配置-->
     <a-config-provider
       :theme="{
         token: {
@@ -14,13 +15,15 @@
         algorithm:[theme[nowTheme]]
       }"
     >
+<!--      路由视图-->
       <router-view></router-view>
 
+<!--      主题切换-->
       <a-float-button
         type="default"
         :style="{
             left: '24px',
-            top: '24px'
+            bottom: '24px'
           }"
         @click="handleClick"
       >

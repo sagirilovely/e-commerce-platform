@@ -8,7 +8,7 @@ export default {
         }
         try {
             let [rows] = await promisePool.execute('SELECT email FROM purchasers WHERE email = ?', [email]);
-            return !(Array.isArray(rows) && (rows.length > 0));
+            return (Array.isArray(rows) && (rows.length > 0));
         }
         catch (err) {
             logger.info('isEmailExist' + err);

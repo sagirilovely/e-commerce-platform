@@ -3,7 +3,7 @@
  <div>
    <div class="text">邮&nbsp;&nbsp;&nbsp;箱：</div>
    <a-auto-complete
-     v-model:value="userEmail"
+     v-model:value.trim="userEmail"
      :allow-clear="true"
      :options="options"
      :placeholder="placeholderObj.emailPlaceholder"
@@ -16,18 +16,18 @@
  </div>
   <div>
     <div class="text">验证码：</div>
-    <a-input v-model:value="verifyCode" :placeholder="placeholderObj.verifyCodePlaceholder" style="width: 140px"/>
+    <a-input v-model:value.trim="verifyCode" :placeholder="placeholderObj.verifyCodePlaceholder" style="width: 140px"/>
     <a-button type="primary" style="margin-left: 20px" @click="getVerifyCode"
               :disabled="getCodeButtonIsDisabled" class="verifyButton">{{buttonText}}
     </a-button>
   </div>
   <div>
     <div class="text">密&nbsp;&nbsp;&nbsp;码：</div>
-    <a-input v-model:value="password" :placeholder="placeholderObj.passwordPlaceholder" style="width: 280px"/>
+    <a-input v-model:value.trim="password" :placeholder="placeholderObj.passwordPlaceholder" style="width: 280px"/>
   </div>
   <div>
     <div class="text">昵&nbsp;&nbsp;&nbsp;称：</div>
-    <a-input v-model:value="nikeName" :placeholder="placeholderObj.nikeNamePlaceholder" style="width: 280px"/>
+    <a-input v-model:value.trim="nikeName" :placeholder="placeholderObj.nikeNamePlaceholder" style="width: 280px"/>
   </div>
   <div class="profile">
     <div class="text">头&nbsp;&nbsp;&nbsp;像：</div>
@@ -52,7 +52,13 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref, watch } from 'vue'
+defineOptions({
+  name: 'RegisterPage'
+})
+onBeforeUnmount(()=>{
+  console.log('组件销毁了')
+})
+import { onBeforeUnmount, reactive, ref, watch } from 'vue'
 import router from '../router/index.ts'
 import { CloseOutlined, UploadOutlined } from '@ant-design/icons-vue'
 import { message } from 'ant-design-vue'
@@ -60,7 +66,7 @@ import eFetch from '@/util/eFetch.ts'
 const options = ref<MockVal[]>([])
 const userEmail = ref('');
 const verifyCode= ref('');
-const buttonText= ref('发送验证码')
+const buttonText= ref('获取验证码')
 const password= ref('');
 const profileList= ref<File[]>([]);
 const nikeName= ref('');
@@ -115,7 +121,7 @@ function getVerifyCode(){
 watch(nextTime,(newVal)=>{
   if(newVal===0){
     getCodeButtonIsDisabled.value=false;
-    buttonText.value='发送验证码';
+    buttonText.value='获取验证码';
     nextTime.value=30;
     clearInterval(IntervalId.value)
   }
@@ -263,7 +269,6 @@ function isValidInput(): boolean{
   margin-bottom: 0.5em;
   position: relative;
   }
-
 .verifyButton{
   width: 120px;
   transition: all ease-in-out 500ms ;

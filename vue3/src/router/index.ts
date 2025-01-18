@@ -3,10 +3,12 @@ import { createRouter, createWebHistory } from 'vue-router'
 import LoginByPassword from '@/views/LoginByPassword.vue'
 import LoginByCode from '@/views/LoginByCode.vue'
 import RegisterPage from '@/views/RegisterPage.vue'
-import verifyPage from '@/views/verifyPage.vue'
+import VerifyPage from '@/views/VerifyPage.vue'
 import HomePage from '@/views/HomePage.vue'
+import GoodsScanPage from '@/views/GoodsScanPage.vue'
 import useVerify from '@/stores/useVerify.ts'
 import {message} from 'ant-design-vue'
+import ShoppingTrolleyPage from '@/views/ShoppingTrolleyPage.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -16,32 +18,44 @@ const router = createRouter({
       redirect: '/home',
     },
     {
-      path: '/home',
-      component: HomePage,
-      name: 'home',
-    },
-    {
       path:'/verify',
-      component:verifyPage,
+      component:VerifyPage,
       name:'verify',
       children:[
         {
           path:'loginByPassword',
           component:LoginByPassword,
-          name:'loginByPassword'
+          name:'loginByPassword',
         },
         {
           path:'loginByCode',
           component:LoginByCode,
-          name:'loginByCode'
+          name:'loginByCode',
         },
         {
           path:'register',
           component:RegisterPage,
-          name:'register'
+          name:'register',
         }
       ]
-    }
+    },
+    {
+      path: '/home',
+      component: HomePage,
+      name: 'home',
+      children:[
+        {
+          path: 'goods',
+          component:GoodsScanPage,
+          name:'goods',
+        },
+        {
+          path: 'trolley',
+          component :ShoppingTrolleyPage,
+          name:'trolley',
+        }
+      ]
+    },
   ],
 })
 
