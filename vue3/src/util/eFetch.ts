@@ -1,8 +1,9 @@
 import useVerify from '@/stores/useVerify.ts'
-interface eFetchData{
+import netPackage from '@/util/netPackage.ts'
+interface eFetchData<T>{
   status:number;
   message:string;
-  data:object | object[]
+  data:T
 }
 
 /**
@@ -14,7 +15,7 @@ interface eFetchData{
  * @param httpBody 请求体内容，将被序列化为JSON格式
  * @returns 返回一个Promise，解析为包含请求状态、消息和数据的对象
  */
-function eFetch(httpUrl:string,httpMethod:string,httpBody?:object):Promise<eFetchData>{
+function eFetch<T>(httpUrl:string,httpMethod:string,httpBody?:object):Promise<eFetchData<T>>{
   const options:{
     method:string,
     headers?:object,
@@ -32,8 +33,8 @@ function eFetch(httpUrl:string,httpMethod:string,httpBody?:object):Promise<eFetc
     // 打印请求信息
     console.log('##options'+options)
   }
-  const httpData:eFetchData={status:0,message:'',data:{}};
-  return fetch(('http://localhost:1010/api/v1'+httpUrl),<object>options)
+  const httpData:eFetchData<T>={status:0,message:'',data:{}as T};
+  return fetch((netPackage.originUrl+httpUrl),<object>options)
     .then((res)=>{
       httpData.status=res.status;
       useVerify().isPassVerify=!(httpData.status===401);
@@ -49,7 +50,7 @@ function eFetch(httpUrl:string,httpMethod:string,httpBody?:object):Promise<eFetc
       useVerify().isPassVerify=false;
       httpData.status=500;
       httpData.message='网络错误';
-      httpData.data={};
+      httpData.data={}as T;
       return Promise.reject(httpData)
     })
 }

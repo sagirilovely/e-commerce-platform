@@ -238,6 +238,30 @@ export default {
                  })
          })
      }
+   },
+   getUserInfo:(req:Request,res:Response)=>{
+       if(!res.userEmail){
+           res.status(403).json({
+               message:"未登录"
+           })
+           return;
+       }
+       userModel.getUserInfo(res.userEmail)
+           .then((result)=>{
+               if(result){
+                   res.status(200).json({
+                       message:"获取成功",
+                       data:Object.assign(result, {userEmail:res.userEmail})
+                   })
+               }else{
+                   res.status(500).json({
+                       message:"获取失败"
+                   })
+               }
+           })
+           .catch((err)=>{
+            logger.error(err)
+        })
    }
 
 }

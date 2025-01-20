@@ -10,4 +10,5 @@ routers.patch('/address', userController.updateUserAddress);
 routers.get('/password/code', userController.getPasswordCode);
 routers.patch('/password', userController.updatePassword);
 routers.patch('/profile', userUpload.single("userProfile"), userController.updateUserProfile);
+routers.get('/info', userController.getUserInfo);
 export default routers;

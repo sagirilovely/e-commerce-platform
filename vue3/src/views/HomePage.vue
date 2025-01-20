@@ -1,12 +1,6 @@
 <template>
-  <div>
-    <button @click="()=>{
-      router.push({name:'goods'})
-    }">商品列表</button>
-    <button @click="()=>{
-      console.log('gwc')
-      router.push({name:'trolley'})
-    }">购物车</button>
+  <div class="home-page">
+    <NavigationBar></NavigationBar>
     <router-view v-slot="{ Component }">
       <keep-alive>
         <component :is="Component" />
@@ -15,8 +9,14 @@
   </div>
 </template>
 <script setup lang="ts">
-import router from '@/router'
+
+import NavigationBar from '@/components/NavigationBar.vue'
 </script>
 <style scoped>
-
+.home-page{
+  width: 100%;
+  height: 100%;
+  min-height: 100vh;
+  display: flex;
+}
 </style>

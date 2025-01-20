@@ -136,5 +136,21 @@ export default {
             logger.info('updateUserProfile' + err);
             return false;
         }
+    },
+    getUserInfo: async (userEmail) => {
+        try {
+            const [rows] = await promisePool.execute(`
+                select profile_photo,nickname,created_time from purchasers where email = ?
+                `, [userEmail]);
+            if (rows.length === 0) {
+                return undefined;
+            }
+            else {
+                return rows[0];
+            }
+        }
+        catch (err) {
+            logger.info('getUserInfo' + err);
+        }
     }
 };

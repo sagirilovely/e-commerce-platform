@@ -63,6 +63,7 @@ import router from '../router/index.ts'
 import { CloseOutlined, UploadOutlined } from '@ant-design/icons-vue'
 import { message } from 'ant-design-vue'
 import eFetch from '@/util/eFetch.ts'
+import netPackage from '@/util/netPackage.ts'
 const options = ref<MockVal[]>([])
 const userEmail = ref('');
 const verifyCode= ref('');
@@ -157,6 +158,7 @@ function register() {
   // 准备好一个formData
   const formData = new FormData();
 let  status:number;
+
   if (profileList.value.length !== 0) {
     formData.append('userProfile', profileList.value[0]);
     formData.append('verifyCode', verifyCode.value);
@@ -164,7 +166,8 @@ let  status:number;
     formData.append('userPassword', password.value);
     formData.append('userNickname', nikeName.value);
   }
-  fetch(' http://localhost:1010/api/v1/verify/register', {
+
+  fetch(netPackage.originUrl+'/verify/register', {
     method: 'POST',
     body: formData,
     credentials: 'include'
