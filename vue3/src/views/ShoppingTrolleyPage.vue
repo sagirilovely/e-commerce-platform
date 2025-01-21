@@ -1,9 +1,11 @@
 <template>
   <div>
-    购物车
+    <TopBanner></TopBanner>
   </div>
 </template>
 <script setup lang="ts">
+import TopBanner from '@/components/TopBanner.vue'
+
 defineOptions({
   name:'ShoppingTrolleyPage'
 })

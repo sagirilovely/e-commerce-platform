@@ -1,5 +1,6 @@
 <template>
-  <div :class="['navigationBar', state.collapsed ? 'navigationBar-shrink' : 'navigationBar-expand']">
+  <div :class="['navigationBar', state.collapsed ? 'navigationBar-shrink' : 'navigationBar-expand']"
+       :style="{'background-color':token.colorBgBase}">
     <a-button type="primary"  @click="toggleCollapsed" class="toggleButton">
       <MenuUnfoldOutlined v-if="state.collapsed" class="menu"/>
       <MenuFoldOutlined v-else class="menu"/>
@@ -21,6 +22,9 @@
   </div>
 </template>
 <script setup lang="ts">
+import { theme } from 'ant-design-vue'
+const { useToken } = theme
+const { token } = useToken()
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
@@ -29,6 +33,7 @@ import {
   UserOutlined,
 } from '@ant-design/icons-vue';
 import { h, onMounted, reactive, ref, watch } from 'vue'
+import useTheme from '@/stores/useTheme.ts'
 import eFetch from '@/util/eFetch.ts'
 import { message } from 'ant-design-vue'
 import netPackage from '@/util/netPackage.ts'
@@ -102,6 +107,7 @@ watch(
 const toggleCollapsed = () => {
   state.collapsed = !state.collapsed;
   state.openKeys = state.collapsed ? [] : state.preOpenKeys;
+  useTheme().isNavigationBarCollapsed=state.collapsed;
 };
 
 </script>
@@ -110,17 +116,18 @@ const toggleCollapsed = () => {
   margin: 5px 10px;
   border-radius: 10px;
   display: flex;
-  background-color: rgb(249, 247, 234);
   flex-direction: column;
   align-items: center;
 }
 .navigationBar-shrink{
   width: 100px;
-  transition: width ease 0.6s;
+  transition: all ease 0.6s;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
 }
 .navigationBar-expand{
   width: 150px;
-  transition: width ease 0.6s;
+  transition: all ease 0.6s;
+  box-shadow: 10px 1px 10px rgba(0,0,0,0.1);
 }
 .toggleButton{
   width: 90%;

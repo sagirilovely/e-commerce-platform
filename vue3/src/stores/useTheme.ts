@@ -3,7 +3,8 @@ import {defineStore} from 'pinia'
 const useTheme=defineStore('useTheme',{
   state:()=>{
     return {
-      isDark:false
+      isDark:false,
+      isNavigationBarCollapsed:false
     }
   },
   actions:{

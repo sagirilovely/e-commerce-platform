@@ -66,7 +66,7 @@ const router = createRouter({
 })
 
 router.beforeEach((to,from,next)=>{
-  if(to.name==='loginByPassword' || to.name==='loginByCode' || to.name==='register' || to.name==='home'){
+  if(to.name==='loginByPassword' || to.name==='loginByCode' || to.name==='register' || to.name==='goods'){
     //如果访问的是登录页面或商品首页,则直接放行
     next();
   }else{

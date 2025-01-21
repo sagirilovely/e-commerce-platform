@@ -30,8 +30,6 @@ function eFetch<T>(httpUrl:string,httpMethod:string,httpBody?:object):Promise<eF
   }
   if (httpMethod !== 'GET') {
     options.body = JSON.stringify(httpBody);
-    // 打印请求信息
-    console.log('##options'+options)
   }
   const httpData:eFetchData<T>={status:0,message:'',data:{}as T};
   return fetch((netPackage.originUrl+httpUrl),<object>options)

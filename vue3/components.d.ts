@@ -22,9 +22,13 @@ declare module 'vue' {
     ASelectOption: typeof import('ant-design-vue/es')['SelectOption']
     ASpace: typeof import('ant-design-vue/es')['Space']
     AUpload: typeof import('ant-design-vue/es')['Upload']
+    CategoryNavigationBar: typeof import('./src/components/CategoryNavigationBar.vue')['default']
+    GoodsDetail: typeof import('./src/components/GoodsDetail.vue')['default']
+    MerchandiseInfo: typeof import('./src/components/MerchandiseInfo.vue')['default']
     NavigationBar: typeof import('./src/components/NavigationBar.vue')['default']
     NavigationsList: typeof import('./src/components/NavigationsList.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    TopBanner: typeof import('./src/components/TopBanner.vue')['default']
   }
 }
