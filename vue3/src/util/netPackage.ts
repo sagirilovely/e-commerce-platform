@@ -1,4 +1,4 @@
 export default {
   originUrl:'http://localhost:1010/api/v1',
-  assetsUrl:'http://localhost:1010',
+  assetsUrl:'http://localhost:1010/public/profile/',
 }

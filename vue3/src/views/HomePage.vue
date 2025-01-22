@@ -9,7 +9,6 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref } from 'vue'
 
 import NavigationBar from '@/components/NavigationBar.vue'
 </script>

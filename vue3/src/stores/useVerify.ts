@@ -9,7 +9,7 @@ const useVerify = defineStore('verify',{
     }
     return {
       isPassVerify:localVerifyStatus,
-      historyName:'goods'
+      historyName:'goods',
     }
   },
   actions:{

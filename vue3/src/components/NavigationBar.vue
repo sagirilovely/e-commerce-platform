@@ -32,12 +32,13 @@ import {
   ShoppingCartOutlined,
   UserOutlined,
 } from '@ant-design/icons-vue';
-import { h, onMounted, reactive, ref, watch } from 'vue'
+import {  h, onMounted, reactive, ref, watch } from 'vue'
 import useTheme from '@/stores/useTheme.ts'
 import eFetch from '@/util/eFetch.ts'
 import { message } from 'ant-design-vue'
 import netPackage from '@/util/netPackage.ts'
 import router from '@/router'
+import useVerify from '@/stores/useVerify.ts'
 const state = reactive({
   collapsed: false,
   selectedKeys: ['goods'],
@@ -78,25 +79,28 @@ interface UserInfo {
   userEmail: string;
   created_time: string;
 }
+
 onMounted(()=>{
-  eFetch<UserInfo>('/user/info', 'GET')
-    .then((res) => {
-      if (res.status === 200) {
-        avatarUrl.value = netPackage.assetsUrl+'/public/profile/'+res.data.profile_photo;
-        nikename.value = res.data.nickname;
-        console.log(avatarUrl.value)
-      }else{
-        message.error(res.message+'喵');
-      }
-  })
-    .catch((err) => {
-      console.log(err);
-    })
+  if(useVerify().isPassVerify){
+    eFetch<UserInfo>('/user/info', 'GET')
+      .then((res) => {
+        if (res.status === 200) {
+          avatarUrl.value = netPackage.assetsUrl+res.data.profile_photo;
+          nikename.value = res.data.nickname;
+          console.log(avatarUrl.value)
+        }else{
+          message.error(res.message+'喵');
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+  }else{
+    avatarUrl.value=netPackage.assetsUrl+'/public/profile/default.jpg';
+    nikename.value='未登录';
+  }
+
 })
-
-
-
-
 
 watch(
   () => state.openKeys,
@@ -118,6 +122,7 @@ const toggleCollapsed = () => {
   display: flex;
   flex-direction: column;
   align-items: center;
+  min-height: 98vh;
 }
 .navigationBar-shrink{
   width: 100px;

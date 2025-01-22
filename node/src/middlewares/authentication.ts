@@ -52,6 +52,7 @@ function verifyToken(req: Request, res: Response, next: NextFunction) {
                 }
                 // 通过验证，把用户 userEmail 挂在 res 对象上，并放行
                 res.userEmail = decoded.userEmail;
+                req.body.userEmail=decoded.userEmail;
                 next();
             }
         });

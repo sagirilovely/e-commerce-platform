@@ -273,5 +273,34 @@ export default {
             .catch((err) => {
             logger.error(err);
         });
+    },
+    updateUserNikename: (req, res) => {
+        const uerEmail = res.userEmail;
+        const userNikename = req.body.nikename;
+        if (!uerEmail || !userNikename) {
+            res.status(500).json({
+                message: "昵称不能为空"
+            });
+            return;
+        }
+        userModel.updateUserNikename(uerEmail, userNikename)
+            .then((result) => {
+            if (result) {
+                res.status(200).json({
+                    message: "修改成功"
+                });
+            }
+            else {
+                res.status(500).json({
+                    message: "修改失败"
+                });
+            }
+        })
+            .catch((err) => {
+            logger.error(err);
+            res.status(500).json({
+                message: "修改失败"
+            });
+        });
     }
 };

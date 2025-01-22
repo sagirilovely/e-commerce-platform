@@ -157,14 +157,14 @@ function register() {
   }
   // 准备好一个formData
   const formData = new FormData();
-let  status:number;
+ let  status:number;
 
   if (profileList.value.length !== 0) {
-    formData.append('userProfile', profileList.value[0]);
     formData.append('verifyCode', verifyCode.value);
     formData.append('userEmail', userEmail.value);
     formData.append('userPassword', password.value);
     formData.append('userNickname', nikeName.value);
+    formData.append('userProfile', profileList.value[0]);
   }
 
   fetch(netPackage.originUrl+'/verify/register', {

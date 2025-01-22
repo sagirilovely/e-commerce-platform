@@ -20,6 +20,7 @@ export function createUpload(savePath:string):Multer{
 
     const upload = multer({
         storage,
+        limits: { fileSize: 1024 * 1024 * 5 }, // 可选限制文件大小
         fileFilter(req: Request, file: Express.Multer.File, callback: multer.FileFilterCallback) {
             // 只允许上传图片类型
             const filetypes = /jpeg|jpg|png|gif/;

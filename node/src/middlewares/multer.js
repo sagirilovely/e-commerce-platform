@@ -16,6 +16,7 @@ export function createUpload(savePath) {
     });
     const upload = multer({
         storage,
+        limits: { fileSize: 1024 * 1024 * 5 }, // 可选限制文件大小
         fileFilter(req, file, callback) {
             // 只允许上传图片类型
             const filetypes = /jpeg|jpg|png|gif/;

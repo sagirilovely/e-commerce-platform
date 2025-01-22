@@ -152,5 +152,18 @@ export default {
         catch (err) {
             logger.info('getUserInfo' + err);
         }
+    },
+    updateUserNikename: async (userEmail, newNickname) => {
+        try {
+            const [rows] = await promisePool.execute(`
+            UPDATE purchasers SET nickname = ?
+            WHERE email = ?;
+            `, [newNickname, userEmail]);
+            return rows.affectedRows === 1;
+        }
+        catch (err) {
+            logger.info('updateUserNikename' + err);
+            return false;
+        }
     }
 };

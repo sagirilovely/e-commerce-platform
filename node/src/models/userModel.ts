@@ -149,5 +149,17 @@ export default {
         }catch (err){
             logger.info('getUserInfo' + err);
         }
+    },
+    updateUserNikename:async (userEmail:string,newNickname:string):Promise<boolean>=>{
+        try{
+            const[rows]=await promisePool.execute<ResultSetHeader>(`
+            UPDATE purchasers SET nickname = ?
+            WHERE email = ?;
+            `,[newNickname,userEmail])
+            return rows.affectedRows === 1;
+        }catch (err){
+            logger.info('updateUserNikename' + err);
+            return false;
+        }
     }
 }

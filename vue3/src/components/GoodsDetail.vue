@@ -29,7 +29,7 @@ function setGoods(){
   flex-direction: column;
   justify-content: space-between;
   border-radius: 20px;
-  margin: 0 10px 10px 0 ;
+  margin: 0 5px 10px 0 ;
   cursor: pointer;
   transition: box-shadow 0.5s ease-in-out;
   overflow: hidden;

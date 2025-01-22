@@ -23,12 +23,13 @@
   </div>
 </template>
 <script setup lang="ts">
-import { theme } from 'ant-design-vue';
+import { message, theme } from 'ant-design-vue'
 const { useToken } = theme;
 const { token } = useToken();
 import useGoods from '@/stores/useGoods.ts'
 import { computed, reactive, watch } from 'vue'
 import eFetch from '@/util/eFetch.ts'
+import router from '@/router'
 const selectedGoodsId=computed(()=>useGoods().selectedGoodsId)
 interface goodsInfo{
   goods_id:string,
@@ -49,6 +50,9 @@ watch(selectedGoodsId,(newValue)=>{
     .then((res)=>{
       if(res.status===200){
         Object.assign(merchandiseInfo,res.data)
+      }else if(res.status){
+        message.warn('请先登录');
+        router.replace({name:'loginByPassword'})
       }
     })
 })
