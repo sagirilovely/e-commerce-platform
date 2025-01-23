@@ -1,9 +1,19 @@
 <template>
-<div :class="['goods-detail', isNavigationBarCollapsed?'goods-detail-shrink':'goods-detail-expand']"
+<!--  :class="['goods-detail', isNavigationBarCollapsed?'goods-detail-shrink':'goods-detail-expand']"-->
+<div
+    :class="['goods-detail', isNavigationBarCollapsed?'goods-detail-shrink':'goods-detail-expand']"
 @click="setGoods">
-   <img :src="img_small_logo" :alt="title" class="goods-img">
-  <div :style="{color:token.colorTextBase,fontSize:'14px'}">{{title}}</div>
-  <div class="goods-price">{{current_price}}</div>
+  <a-card hoverable style="width: 220px">
+    <template #cover>
+      <img :src="img_small_logo" :alt="title"  />
+    </template>
+    <a-card-meta :title="title">
+      <template #description>￥{{current_price}}元</template>
+    </a-card-meta>
+  </a-card>
+<!--   <img :src="img_small_logo" :alt="title" class="goods-img">-->
+<!--  <div :style="{color:token.colorTextBase,fontSize:'14px'}">{{title}}</div>-->
+<!--  <div class="goods-price">{{current_price}}</div>-->
 </div>
 </template>
 <script setup lang="ts">
@@ -20,30 +30,18 @@ function setGoods(){
 }
 </script>
 <style scoped>
+
 .goods-detail{
-  height: 300px;
-  position: relative;
-  float: left;
-  box-shadow: 1px 1px 20px rgba(100,100,100,0.3);
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  border-radius: 20px;
-  margin: 0 5px 10px 0 ;
-  cursor: pointer;
-  transition: box-shadow 0.5s ease-in-out;
-  overflow: hidden;
-}
-.goods-detail:hover{
-  box-shadow: 1px 1px 50px rgba(100,100,100,0.5);
+    float: left;
+  width: 100%;
 }
 .goods-detail-shrink{
   transition: width 0.5s ease-in-out;
-  width: 210px;
+  width: 220px;
 }
 .goods-detail-expand{
   transition: width 0.5s ease-in-out;
-  width: 265px;
+  width: 260px;
 }
 .goods-price{
   color: red;

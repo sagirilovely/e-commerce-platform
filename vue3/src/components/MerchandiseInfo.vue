@@ -1,97 +1,174 @@
 <template>
-  <div class="merchandise-info" :style="{ 'background-color': token.colorBgBase }"
-  v-if="selectedGoodsId">
-    <img :src="merchandiseInfo.img_big_logo" :alt="merchandiseInfo.title">
-    <div :style="{fontSize:'25px',color:token.colorTextBase}">{{merchandiseInfo.title}}</div>
-    <div style="display: flex;align-items: center;justify-content: right;margin-right: 10px">
-      <span style="font-size: 25px;color: red">{{merchandiseInfo.current_price}}</span>
-      <span style="font-size: 12px"><del>{{merchandiseInfo.price}}</del></span>
+  <a-card
+    class="merchandise-info"
+    :style="{ 'background-color': token.colorBgBase }"
+    v-if="selectedGoodsId"
+    bordered
+    hoverable
+    ref="merchandise-info"
+  >
+    <!-- 新增关闭按钮 -->
+    <div class="close-btn" @click="handleClose">
+      <CloseOutlined :style="{ fontSize: '16px', color: token.colorTextSecondary }" />
     </div>
-    <div style="display: flex;align-items: center;justify-content:space-evenly;margin-right: 40%">
-      <span style="font-size: small">分类: {{merchandiseInfo.category}}</span>
-      <span style="font-size: small">库存: {{merchandiseInfo.goods_number}}</span>
-      <span style="font-size: small">商家: {{merchandiseInfo.merchant_nikename}}</span>
+    <div class="scrollable-content">
+      <a-row gutter="16">
+        <!-- 商品图片 -->
+        <a-col :span="24" style="text-align: center; margin-bottom: 20px">
+          <img
+            :src="merchandiseInfo.img_big_logo"
+            :alt="merchandiseInfo.title"
+            style="max-height: 300px; max-width: 100%; border-radius: 10px"
+          />
+        </a-col>
+
+        <!-- 商品标题和价格 -->
+        <a-col :span="24">
+          <div :style="{'color':token.colorPrimary,fontSize: '20px', marginBottom: '10px',
+          fontWeight: 'bold',textAlign: 'center'}" >
+            {{ merchandiseInfo.title }}
+          </div>
+        </a-col>
+
+        <a-col :span="24">
+          <div
+            style="display: flex; align-items: center; justify-content: center; margin-bottom: 10px"
+          >
+            <span style="font-size: 25px; color: red; font-weight: bold; margin-right: 8px">
+              ¥{{ merchandiseInfo.current_price }}
+            </span>
+            <span style="font-size: 12px; color: gray">
+              <del>¥{{ merchandiseInfo.price }}</del>
+            </span>
+          </div>
+        </a-col>
+
+        <!-- 商品分类、库存、商家 -->
+        <a-col :span="24">
+          <a-descriptions column="1" size="small" bordered>
+            <a-descriptions-item label="分类">{{ merchandiseInfo.category }}</a-descriptions-item>
+            <a-descriptions-item label="库存">{{
+              merchandiseInfo.goods_number
+            }}</a-descriptions-item>
+            <a-descriptions-item label="商家">{{
+              merchandiseInfo.merchant_nikename
+            }}</a-descriptions-item>
+          </a-descriptions>
+        </a-col>
+
+        <!-- 评论数量 -->
+        <a-col :span="24" style="text-align: center; margin-top: 10px">
+          <a-tag color="blue">评论数量: {{ merchandiseInfo.comment_count }}</a-tag>
+        </a-col>
+
+        <!-- 商品介绍 -->
+        <a-col :span="24" style="margin-top: 20px">
+          <div v-html="merchandiseInfo.goods_introduce" class="goods-detail-info"></div>
+        </a-col>
+      </a-row>
     </div>
-    <div style="display: flex;align-items: center;justify-content: right;margin-right: 10px">
-      评论数量:{{merchandiseInfo.comment_count}}
-    </div>
-    <div v-html="merchandiseInfo.goods_introduce"></div>
-    <div class="buyButton">
-      <a-button type="default">加入购物车</a-button>&nbsp;&nbsp;
+
+    <!-- 操作按钮 -->
+    <div class="floating-buttons">
+      <a-button type="default" style="margin-right: 10px">加入购物车</a-button>
       <a-button type="primary">立即购买</a-button>
     </div>
-  </div>
+  </a-card>
 </template>
+
 <script setup lang="ts">
 import { message, theme } from 'ant-design-vue'
-const { useToken } = theme;
-const { token } = useToken();
+const { useToken } = theme
+const { token } = useToken()
+
 import useGoods from '@/stores/useGoods.ts'
-import { computed, reactive, watch } from 'vue'
+import { computed, reactive, useTemplateRef, watch } from 'vue'
 import eFetch from '@/util/eFetch.ts'
 import router from '@/router'
-const selectedGoodsId=computed(()=>useGoods().selectedGoodsId)
-interface goodsInfo{
-  goods_id:string,
-  title:string,
-  img_big_logo:string,
-  price:string,
-  current_price:string,
-  goods_number:string,
-  goods_introduce:string,
-  category:string,
-  merchant_nikename:string,
-  comment_count:string
-}
-const merchandiseInfo=reactive(<goodsInfo>{})
 
-watch(selectedGoodsId,(newValue)=>{
-  eFetch(`/merchandise/detail?goods_id=${newValue}`,'GET')
-    .then((res)=>{
-      if(res.status===200){
-        Object.assign(merchandiseInfo,res.data)
-      }else if(res.status){
-        message.warn('请先登录');
-        router.replace({name:'loginByPassword'})
-      }
-    })
+import { CloseOutlined } from '@ant-design/icons-vue'
+
+
+const selectedGoodsId = computed(() => useGoods().selectedGoodsId)
+
+interface goodsInfo {
+  goods_id: string
+  title: string
+  img_big_logo: string
+  price: string
+  current_price: string
+  goods_number: string
+  goods_introduce: string
+  category: string
+  merchant_nikename: string
+  comment_count: string
+}
+const handleClose = () => {
+  useGoods().selectedGoodsId = '';
+}
+const merchandiseInfo = reactive(<goodsInfo>{})
+//获取此模板的dom结点,使用vue-ref的方式
+const merchandiseInfoDom = useTemplateRef('merchandise-info')
+
+watch(selectedGoodsId, (newValue) => {
+  if(newValue===''){return};
+  eFetch(`/merchandise/detail?goods_id=${newValue}`, 'GET').then((res) => {
+    if (res.status === 200) {
+      Object.assign(merchandiseInfo, res.data);
+      (merchandiseInfoDom.value as HTMLElement)?.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    } else if (res.status) {
+      message.warn('请先登录')
+      router.replace({ name: 'loginByPassword' })
+    }
+  })
 })
 </script>
+
 <style scoped>
-.merchandise-info{
-  max-width: 33%;
-  flex: 1 1 auto;
-  margin: 0 10px 10px 0;
-  border-radius: 20px;
-  overflow: auto;
-  display: flex;
+.close-btn {
+  position: sticky;
+  top: 10px;
+  left: 10px;
+  cursor: pointer;
+  z-index: 1;
+  margin-left: 99%;
+  text-align: center;
+  width: 20px;
+  height: 20px;
+  transition: all 0.3s;
+}
+.close-btn:hover {
+  background-color: rgba(0, 0, 0, 0.06);
+  border-radius: 50%;
+}
+.merchandise-info {
+  max-width: 480px;
   height: 570px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
   flex-direction: column;
+  overflow-y: auto;
 }
-.merchandise-info>img{
-  height: 60%;
-  flex: 1 0 auto;
+
+.scrollable-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px;
+  scrollbar-width: thin;
 }
-.buyButton::before {
-  content: '';
-  position: absolute;
-  top: -1px;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(108, 61, 98, 0.6); /* 替换为你的图片 */
-  filter: blur(2px); /* 模糊背景 */
-  z-index: -1;
-}
-.buyButton{
-  height: 100%;
-  min-height: 7%;
-  box-shadow: 1px -20px 70px 3px rgba(108, 61, 98, 0.6);
+
+.floating-buttons {
   position: sticky;
   bottom: 0;
-  display: flex;
-  justify-content: right;
-  align-items: center;
-  padding-right: 5%;
+  padding: 10px;
+  text-align: center;
 }
+.goods-detail-info {
+  overflow-y: scroll;
+}
+
 </style>
