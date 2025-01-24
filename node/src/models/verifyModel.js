@@ -19,7 +19,7 @@ export default {
     saveUserInformation: async (userInfo) => {
         const { email, password, created_time, profile_photo, nickname } = userInfo;
         try {
-            let [result] = await promisePool.execute(`INSERT INTO purchasers (password, email, created_time, profile_photo, nickname) VALUES (?, ?, ?, ?, ?);`, [password, email, created_time, profile_photo, nickname]);
+            let [result] = await promisePool.execute(`INSERT INTO purchasers (password, email, created_time, profile_photo, nickname,shopping_trolley,receiver_address) VALUES (?, ?, ?, ?, ?,?,?);`, [password, email, created_time, profile_photo, nickname, '{}', '{}']);
             return (result.affectedRows !== 0);
         }
         catch (err) {

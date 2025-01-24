@@ -403,3 +403,81 @@
 ## |1| 2025-1-23 15:56:32
 ## [INFO] 服务器启动成功，地址为 http://localhost:1010 
 -----------------------------------------------------------------------------------
+## |1| 2025-1-24 17:29:22
+## [INFO] 服务器启动成功，地址为 http://localhost:1010 
+-----------------------------------------------------------------------------------
+## |2| 2025-1-24 17:49:54
+## [INFO] getUserTrolleyTypeError: Cannot convert undefined or null to object 
+-----------------------------------------------------------------------------------
+## |1| 2025-1-24 18:10:41
+## [INFO] 服务器启动成功，地址为 http://localhost:1010 
+-----------------------------------------------------------------------------------
+## |1| 2025-1-24 18:18:22
+## [INFO] 服务器启动成功，地址为 http://localhost:1010 
+-----------------------------------------------------------------------------------
+## |1| 2025-1-24 20:3:39
+## [INFO] 服务器启动成功，地址为 http://localhost:1010 
+-----------------------------------------------------------------------------------
+## |2| 2025-1-24 21:3:34
+## [INFO] getUserTrolleyError: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ')' at line 3 
+-----------------------------------------------------------------------------------
+## |3| 2025-1-24 21:3:38
+## [INFO] getUserTrolleyError: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ')' at line 3 
+-----------------------------------------------------------------------------------
+## |4| 2025-1-24 21:4:33
+## [INFO] getUserTrolleyError: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ')' at line 3 
+-----------------------------------------------------------------------------------
+## |5| 2025-1-24 21:5:47
+## [INFO] getUserTrolleyError: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ')' at line 3 
+-----------------------------------------------------------------------------------
+## |6| 2025-1-24 21:5:47
+## [INFO] getUserTrolleyError: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ')' at line 3 
+-----------------------------------------------------------------------------------
+## |7| 2025-1-24 21:5:52
+## [INFO] getUserTrolleyError: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ')' at line 3 
+-----------------------------------------------------------------------------------
+## |8| 2025-1-24 21:5:54
+## [INFO] getUserTrolleyError: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ')' at line 3 
+-----------------------------------------------------------------------------------
+## |9| 2025-1-24 21:6:10
+## [INFO] getUserTrolleyError: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ')' at line 3 
+-----------------------------------------------------------------------------------
+## |10| 2025-1-24 21:6:10
+## [INFO] getUserTrolleyError: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ')' at line 3 
+-----------------------------------------------------------------------------------
+## |11| 2025-1-24 21:6:23
+## [INFO] getUserTrolleyError: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ')' at line 3 
+-----------------------------------------------------------------------------------
+## |12| 2025-1-24 21:6:23
+## [INFO] getUserTrolleyError: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ')' at line 3 
+-----------------------------------------------------------------------------------
+## |13| 2025-1-24 21:14:48
+## [INFO] getUserTrolleyError: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ')' at line 3 
+-----------------------------------------------------------------------------------
+## |14| 2025-1-24 21:14:48
+## [INFO] getUserTrolleyError: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ')' at line 3 
+-----------------------------------------------------------------------------------
+## |15| 2025-1-24 21:15:3
+## [INFO] getUserTrolleyError: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ')' at line 3 
+-----------------------------------------------------------------------------------
+## |16| 2025-1-24 21:15:3
+## [INFO] getUserTrolleyError: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ')' at line 3 
+-----------------------------------------------------------------------------------
+## |17| 2025-1-24 21:26:19
+## [INFO] getUserTrolleyError: Unknown column 'NaN' in 'where clause' 
+-----------------------------------------------------------------------------------
+## |18| 2025-1-24 21:26:19
+## [INFO] getUserTrolleyError: Unknown column 'NaN' in 'where clause' 
+-----------------------------------------------------------------------------------
+## |19| 2025-1-24 21:26:22
+## [INFO] getUserTrolleyError: Unknown column 'NaN' in 'where clause' 
+-----------------------------------------------------------------------------------
+## |20| 2025-1-24 21:26:22
+## [INFO] getUserTrolleyError: Unknown column 'NaN' in 'where clause' 
+-----------------------------------------------------------------------------------
+## |21| 2025-1-24 21:26:29
+## [INFO] getUserTrolleyError: Unknown column 'NaN' in 'where clause' 
+-----------------------------------------------------------------------------------
+## |22| 2025-1-24 21:26:33
+## [INFO] getUserTrolleyError: Unknown column 'NaN' in 'where clause' 
+-----------------------------------------------------------------------------------

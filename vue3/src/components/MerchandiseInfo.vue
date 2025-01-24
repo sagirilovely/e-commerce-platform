@@ -12,7 +12,7 @@
       <CloseOutlined :style="{ fontSize: '16px', color: token.colorTextSecondary }" />
     </div>
     <div class="scrollable-content">
-      <a-row gutter="16">
+      <a-row :gutter="16">
         <!-- 商品图片 -->
         <a-col :span="24" style="text-align: center; margin-bottom: 20px">
           <img
@@ -45,7 +45,7 @@
 
         <!-- 商品分类、库存、商家 -->
         <a-col :span="24">
-          <a-descriptions column="1" size="small" bordered>
+          <a-descriptions :column="1" size="small" bordered>
             <a-descriptions-item label="分类">{{ merchandiseInfo.category }}</a-descriptions-item>
             <a-descriptions-item label="库存">{{
               merchandiseInfo.goods_number
@@ -70,8 +70,9 @@
 
     <!-- 操作按钮 -->
     <div class="floating-buttons">
-      <a-button type="default" style="margin-right: 10px">加入购物车</a-button>
-      <a-button type="primary">立即购买</a-button>
+      <a-input-number :min="1" :max="99" v-model:value="goodsCount"></a-input-number>
+      <a-button type="default" style="margin-right: 10px" @click="addTrolley">加入购物车</a-button>
+      <a-button type="primary" @click="handlePurchase(selectedGoodsId, goodsCount)">立即购买</a-button>
     </div>
   </a-card>
 </template>
@@ -82,7 +83,7 @@ const { useToken } = theme
 const { token } = useToken()
 
 import useGoods from '@/stores/useGoods.ts'
-import { computed, reactive, useTemplateRef, watch } from 'vue'
+import { computed, reactive, ref, watch } from 'vue'
 import eFetch from '@/util/eFetch.ts'
 import router from '@/router'
 
@@ -107,24 +108,50 @@ const handleClose = () => {
   useGoods().selectedGoodsId = '';
 }
 const merchandiseInfo = reactive(<goodsInfo>{})
-//获取此模板的dom结点,使用vue-ref的方式
-const merchandiseInfoDom = useTemplateRef('merchandise-info')
 
+const goodsCount=ref(1);//购买数量
 watch(selectedGoodsId, (newValue) => {
-  if(newValue===''){return};
+  if(newValue===''){return}
+  //置空数量
+  goodsCount.value=1;
   eFetch(`/merchandise/detail?goods_id=${newValue}`, 'GET').then((res) => {
     if (res.status === 200) {
       Object.assign(merchandiseInfo, res.data);
-      (merchandiseInfoDom.value as HTMLElement)?.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-      });
     } else if (res.status) {
       message.warn('请先登录')
       router.replace({ name: 'loginByPassword' })
     }
   })
 })
+//加入购物车
+function addTrolley(){
+  eFetch('/user/trolley',"PATCH",{
+    "goods_obj":{
+      [selectedGoodsId.value]:goodsCount.value
+    }
+  })
+    .then((res)=>{
+      if(res.status===200){
+        message.success(res.message)
+      }else{
+        message.error(res.message)
+      }
+    })
+    .catch((err)=>{
+      console.log(err)
+      message.error('才不是伺服君的错');
+    })
+}
+
+const handlePurchase = (selectedGoodsId: string, goodsCount: number) => {
+  // TODO: 待补充购买逻辑
+  if(goodsCount===0){
+    message.error('商品数量不能为0');
+    return;
+  }
+}
+
+
 </script>
 
 <style scoped>
@@ -166,6 +193,9 @@ watch(selectedGoodsId, (newValue) => {
   bottom: 0;
   padding: 10px;
   text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .goods-detail-info {
   overflow-y: scroll;

@@ -3,7 +3,7 @@
 <div
     :class="['goods-detail', isNavigationBarCollapsed?'goods-detail-shrink':'goods-detail-expand']"
 @click="setGoods">
-  <a-card hoverable style="width: 220px">
+  <a-card hoverable style="width: 215px">
     <template #cover>
       <img :src="img_small_logo" :alt="title"  />
     </template>
@@ -37,11 +37,11 @@ function setGoods(){
 }
 .goods-detail-shrink{
   transition: width 0.5s ease-in-out;
-  width: 220px;
+  width: 215px;
 }
 .goods-detail-expand{
   transition: width 0.5s ease-in-out;
-  width: 260px;
+  width: 256px;
 }
 .goods-price{
   color: red;
