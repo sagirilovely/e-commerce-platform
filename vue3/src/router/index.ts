@@ -10,6 +10,7 @@ import useVerify from '@/stores/useVerify.ts'
 import {message} from 'ant-design-vue'
 import ShoppingTrolleyPage from '@/views/ShoppingTrolleyPage.vue'
 import UserInfo from '@/views/UserInfo.vue'
+import OrderPage from '@/views/OrderPage.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -59,6 +60,11 @@ const router = createRouter({
           path:'user',
           component: UserInfo,
           name:'user',
+        },
+        {
+          path: 'order',
+          component: OrderPage,
+          name:'order',
         }
       ]
     },

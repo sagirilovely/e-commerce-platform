@@ -60,8 +60,6 @@ interface GoodsItem {
 const goodsList = reactive<GoodsItem[]>([])
 const goodsListScroll = (event: Event) => {
   const target = event.target as HTMLElement;
-  console.log('scrollTop', target.scrollTop)
-  console.log('clientHeight', target.clientHeight)
   if (Math.ceil(target.scrollTop) + Math.ceil(target.clientHeight) >= target.scrollHeight) {
    const timer= setTimeout(()=>{
       offset.value += 10

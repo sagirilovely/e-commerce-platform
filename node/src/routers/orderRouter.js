@@ -7,4 +7,5 @@ routers.patch('/refund', orderController.refundOrder);
 routers.patch('/delivery', orderController.deliveryOrder);
 routers.get('/detail', orderController.getOrderDetail);
 routers.get('/summary', orderController.getOrderSummary);
+routers.delete('/', orderController.delOrder);
 export default routers;

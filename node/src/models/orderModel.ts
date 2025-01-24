@@ -192,7 +192,7 @@ export default {
                 }
                 try {
                     let [rows] = await promisePool.execute<RowDataPacket[]>(`
-                        select title, img_small_logo, current_price
+                        select title, img_small_logo, current_price,goods_id
                         from products
                         where goods_id = ?;
                     `, [goods_id]);
@@ -226,8 +226,8 @@ export default {
             const [rows] = await promisePool.execute<RowDataPacket[]>(`
                 select order_id,created_time,is_take_delivery,goods_count,is_refund,is_refund_allowed,is_paid,goods_id
                 from orders
-                where purchaser_id = 1 ;
-            `)
+                where purchaser_id = ? ;
+            `,[purchaser_id]);
             let orderSummaryList =rows;
             let productIdList: number[] = [];
             for(let order of orderSummaryList){
@@ -243,7 +243,6 @@ export default {
                 for (let goods of goodsList){
                     if(orderSummary.goods_id === goods.goods_id){
                         Object.assign(orderSummary,goods);
-                        delete orderSummary.goods_id;
                     }
                 }
             }
@@ -251,6 +250,17 @@ export default {
         }catch (err){
             logger.error("getOrderSummary:" + err);
             return undefined;
+        }
+    },
+    delOrder: async (order_id: string):Promise<boolean>=> {
+        try {
+            const [rows] = await promisePool.execute<ResultSetHeader>(
+              `delete from orders where order_id = ?`
+            ,[order_id])
+            return rows.affectedRows > 0;
+        }catch (err){
+            logger.error("delOrder:" + err);
+            return false;
         }
     }
 };

@@ -1,5 +1,6 @@
 import orderModel from "../models/orderModel.js";
 import logger from "../dev/logger.js";
+import OrderModel from '../models/orderModel.js';
 export default {
     createOrder: async (req, res) => {
         const goods_id = req.body.goods_id;
@@ -170,6 +171,21 @@ export default {
             });
         })
             .catch((err) => {
+            logger.error(err);
+            res.status(500).json({ message: "服务器出错" });
+        });
+    },
+    delOrder: (req, res) => {
+        const order_id = req.body.order_id;
+        OrderModel.delOrder(order_id)
+            .then((value) => {
+            if (value) {
+                res.status(200).json({ message: "订单取消成功" });
+            }
+            else {
+                res.status(403).json({ message: "订单取消失败" });
+            }
+        }).catch((err) => {
             logger.error(err);
             res.status(500).json({ message: "服务器出错" });
         });

@@ -63,6 +63,12 @@ const items = reactive([
     icon: () => h(UserOutlined),
     label: '个人信息',
     title: '个人信息',
+  },
+  {
+    key:'order',
+    icon: () => h(ShoppingCartOutlined),
+    label: '我的订单',
+    title: '我的订单',
   }
 ]);
 interface itemInfo {
