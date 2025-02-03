@@ -712,3 +712,6 @@
 ## |3| 2025-2-3 20:23:15
 ## [ERROR] getOrderSummary:Error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ')' at line 3 
 -----------------------------------------------------------------------------------
+## |1| 2025-2-3 20:30:50
+## [INFO] 服务器启动成功，地址为 http://localhost:1010 
+-----------------------------------------------------------------------------------
