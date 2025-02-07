@@ -715,3 +715,12 @@
 ## |1| 2025-2-3 20:30:50
 ## [INFO] 服务器启动成功，地址为 http://localhost:1010 
 -----------------------------------------------------------------------------------
+## |1| 2025-2-7 15:20:39
+## [INFO] 服务器启动成功，地址为 http://localhost:1010 
+-----------------------------------------------------------------------------------
+## |2| 2025-2-7 15:49:37
+## [INFO] getUserTrolleyError: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ')' at line 3 
+-----------------------------------------------------------------------------------
+## |3| 2025-2-7 15:49:41
+## [INFO] getUserTrolleyError: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ')' at line 3 
+-----------------------------------------------------------------------------------
