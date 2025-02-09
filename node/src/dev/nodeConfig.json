@@ -20,8 +20,8 @@
     "delay": "259200000"
   },
   "expressStatic": {
-    "isLocal": true,
-    "staticURL":""
+    "staticURL":"",
+    "goodsImg": "http://localhost:1010/public"
   },
   "eMailConfig": {
     "host": "smtp.qq.com",

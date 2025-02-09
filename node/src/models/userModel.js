@@ -165,5 +165,51 @@ export default {
             logger.info('updateUserNikename' + err);
             return false;
         }
+    },
+    createMerchant: async (userInfo) => {
+        try {
+            //先判断该用户是否已经存在
+            const [rows] = await promisePool.execute(`
+            select email from merchants where email = ?;
+        `, [userInfo.email]);
+            if (rows.length !== 0) {
+                //已经存在
+                return false;
+            }
+            //创建商户
+            const [rows1] = await promisePool.execute(`
+                insert into merchants(email,password,created_time,profile_photo,nickname)
+                values (?,?,?,?,?);
+            `, [userInfo.email, userInfo.password, userInfo.created_time, userInfo.profile_photo, userInfo.nickname]);
+            return rows1.affectedRows === 1;
+        }
+        catch (err) {
+            logger.info('createMerchant' + err);
+            return false;
+        }
+    },
+    merchantLoginByPassword: async (userEmail, userPassword) => {
+        //查询该用户的密码,对比是否相等
+        const [rows] = await promisePool.execute(`
+            select password from merchants where email = ?
+        `, [userEmail]);
+        const passwordDatabase = rows[0].password;
+        return passwordDatabase === userPassword;
+    },
+    adminLogin: async (userEmail, userPassword) => {
+        try {
+            const [rows] = await promisePool.execute(`
+                select password from administrators where email = ?;
+            `, [userEmail]);
+            if (rows.length === 0) {
+                return false;
+            }
+            const passwordDatabase = rows[0].password;
+            return passwordDatabase === userPassword;
+        }
+        catch (err) {
+            logger.info('adminLogin' + err);
+            return false;
+        }
     }
 };

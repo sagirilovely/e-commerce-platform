@@ -8,8 +8,5 @@ let dirPath = path.dirname(filePath); //这里拿到的是本js文件的目录�
 //本js文件与json配置文件在同一个目录,因此可以拼出配置文件的完整绝对路径:
 let jsonPath = path.join(dirPath, 'nodeConfig.json');
 let configMessage = JSON.parse(fs.readFileSync(jsonPath, 'utf-8'));
-if (configMessage.expressStatic.isLocal) {
-    //将staticURL设置为src/public
-    configMessage.expressStatic.staticURL = path.join(path.dirname(dirPath), 'public');
-}
+configMessage.expressStatic.staticURL = path.join(path.dirname(dirPath), 'public');
 export default configMessage;

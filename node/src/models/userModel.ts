@@ -3,6 +3,13 @@ import logger from "../dev/logger.js";
 import {ResultSetHeader, RowDataPacket} from "mysql2";
 import path from "path";
 
+interface UserInfo {
+    email: string;
+    password: string;
+    nickname: string;
+    created_time: Date|string;
+    profile_photo: string;
+}
 export default {
     updateUserTrolley: async (userEmail:string,goods_obj:object):Promise<boolean|undefined> => {
         try {
@@ -159,6 +166,51 @@ export default {
             return rows.affectedRows === 1;
         }catch (err){
             logger.info('updateUserNikename' + err);
+            return false;
+        }
+    },
+    createMerchant:async (userInfo:UserInfo):Promise<boolean>=>{
+        try{
+            //先判断该用户是否已经存在
+            const [rows]=await promisePool.execute<RowDataPacket[]>(`
+            select email from merchants where email = ?;
+        `,[userInfo.email]);
+            if(rows.length!==0){
+                //已经存在
+                return false;
+            }
+            //创建商户
+            const [rows1]=await promisePool.execute<ResultSetHeader>(`
+                insert into merchants(email,password,created_time,profile_photo,nickname)
+                values (?,?,?,?,?);
+            `,[userInfo.email,userInfo.password,userInfo.created_time,userInfo.profile_photo,userInfo.nickname]);
+            return rows1.affectedRows === 1;
+        }
+        catch (err){
+            logger.info('createMerchant' + err);
+            return false;
+        }
+    },
+    merchantLoginByPassword:async (userEmail:string,userPassword:string):Promise<boolean>=>{
+        //查询该用户的密码,对比是否相等
+        const [rows]=await  promisePool.execute<RowDataPacket[]>(`
+            select password from merchants where email = ?
+        `,[userEmail]);
+        const passwordDatabase = rows[0].password;
+        return passwordDatabase === userPassword;
+    },
+    adminLogin:async (userEmail:string,userPassword:string):Promise<boolean>=>{
+        try{
+            const [rows]=await  promisePool.execute<RowDataPacket[]>(`
+                select password from administrators where email = ?;
+            `,[userEmail])
+            if(rows.length===0){
+                return false;
+            }
+            const passwordDatabase = rows[0].password;
+            return passwordDatabase === userPassword;
+        }catch (err){
+            logger.info('adminLogin' + err);
             return false;
         }
     }

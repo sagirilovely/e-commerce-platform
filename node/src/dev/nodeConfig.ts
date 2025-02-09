@@ -11,9 +11,6 @@ let dirPath = path.dirname(filePath)//这里拿到的是本js文件的目录路�
 let jsonPath = path.join(dirPath, 'nodeConfig.json');
 let configMessage = JSON.parse(fs.readFileSync(jsonPath, 'utf-8'));
 
-if(configMessage.expressStatic.isLocal){
-    //将staticURL设置为src/public
-    configMessage.expressStatic.staticURL=path.join(path.dirname(dirPath),'public');
-}
+configMessage.expressStatic.staticURL=path.join(path.dirname(dirPath),'public');
 
 export default configMessage;

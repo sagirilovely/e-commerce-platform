@@ -5,6 +5,12 @@ import jwt from "jsonwebtoken";
 import configMessage from "../dev/nodeConfig.js";
 const {secret} = configMessage.authentication;
 const {host} = configMessage.serveConfig;
+/**
+ * 发送新的验证码
+ * @param req Express请求对象
+ * @param res Express响应对象
+ * @param email 用户邮箱地址，可能未定义
+ */
 function sendNewCode(req: Request, res: Response,email:string|undefined){
     //生成一个验证码
     const newVerifyCode = createVerifyCode(6);

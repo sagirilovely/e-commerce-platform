@@ -8,6 +8,17 @@ type Goods = {
   img_big_logo: string;
   current_price: number;
 };
+interface GoodsOfMerchant  {
+  goods_id: number;
+  title:string;
+  img_big_logo:string;
+  img_small_logo:string;
+  current_price:number|string;
+  price:number|string;
+  goods_number:number|string;
+  goods_introduce:string;
+  category:string;
+}
 export default {
   getGoodsData: async (
     category: string,
@@ -43,4 +54,5 @@ export default {
       return undefined;
     }
   },
+
 };

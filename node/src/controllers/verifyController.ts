@@ -11,6 +11,7 @@ import createHashPassword from "../util/createHashPassword.js";
 import path from "path";
 import setToken from "../util/setToken.js";
 import sendNewCode from "../util/sendNewCode.js";
+import userModel from '../models/userModel.js'
 
 const saveUserInformation = verifyModel.saveUserInformation;
 const getHashPassword =verifyModel.getHashPassword;
@@ -163,5 +164,130 @@ export default {
             })
         }
 
+    },
+    createMerchant:(req:Request,res:Response)=>{
+        //1. 从body中获取验证码,若为空则发送新验证码到邮箱
+        //2. 若不为空,则验证验证码是否正确,正确则创建商户
+        const verifyCode=req.body.verifyCode;
+        if(!verifyCode){
+            //发送新验证码
+            sendNewCode(req,res,req.body.userEmail);
+            return;
+        }else{
+            //验证验证码
+            jwt.verify(req.cookies.newVerifyCode, secret, (error: VerifyErrors | null, decoded: any) => {
+                if (error) {
+                    res.status(401).send(JSON.stringify({message: '验证码已过期'}))
+                }else{
+                    if(decoded.newVerifyCode === verifyCode && decoded.userEmail===req.body.userEmail){
+                        //验证码正确,创建商户
+                        if(!req.file){
+                            res.status(401).send(JSON.stringify({message: '头像为空'}))
+                            return;
+                        }
+                        const time = new Date();
+                        const userInfo: UserInfo = {
+                            email: req.body.userEmail,
+                            password: createHashPassword(req.body.userPassword),
+                            created_time: `${time.getFullYear()}-${time.getMonth() + 1}-${time.getDate()}`,
+                            profile_photo: `${req.body.userEmail}${path.extname(req.file.originalname)}`,
+                            nickname: req.body.userNickname
+                        };
+                        userModel.createMerchant(userInfo)
+                          .then((value)=>{
+                              if (value){
+                                  res.status(201).send(JSON.stringify({message: '创建成功'}))
+                              }else{
+                                  res.status(401).send(JSON.stringify({message: '账户可能已经存在'}))
+                              }
+                          })
+                          .catch((err)=>{
+                              logger.error('商家注册失败');
+                          })
+                    }else{
+                        //验证码错误
+                        res.status(401).send(JSON.stringify({message: '验证码错误'}))
+                    }
+                }
+            })
+        }
+    },
+    merchantLoginByPassword:async (req:Request,res:Response)=>{
+        //商家密码登录
+        const userEmail=req.body.userEmail;
+        let userPassword=req.body.userPassword;
+        //取出账密,将密码转为hash与数据库的hash对比;正确则写入token
+        if(!userEmail || !userPassword){
+            //密码为空
+            res.status(401).json({"message":"账号或密码为空"});
+            return;
+        }
+        userPassword=createHashPassword(userPassword);
+        const isPass=await userModel.merchantLoginByPassword(userEmail,userPassword);
+        if(isPass){
+            //密码正确
+            setToken(res,userEmail);
+            res.status(201).json({"message":"登录成功"});
+        }else{
+            res.status(401).json({"message":"账号与密码不匹配"});
+        }
+    },
+    merchantLoginByCode:(req:Request,res:Response)=>{
+        //商家验证码登录
+        const verifyCodeBody=req.body.verifyCode;
+        const userEmail=req.body.userEmail;
+        if(!userEmail){
+            res.status(401).json({"message":"邮箱为空"});
+            return;
+        }
+        if(!verifyCodeBody){
+            //若body没有带verifyCode则说明是要一个验证码
+            sendNewCode(req,res,userEmail);
+            return;
+        }
+        jwt.verify(req.cookies.newVerifyCode, secret, (error: VerifyErrors | null, decoded: any) => {
+            if(!error){
+               if( decoded.newVerifyCode === verifyCodeBody && decoded.userEmail===userEmail){
+                   //验证码正确
+                   setToken(res,userEmail);
+                   res.status(201).json({"message":"登录成功"});
+                   return;
+               }else{
+                   //验证码错误
+                   res.status(401).json({"message":"验证码错误"});
+                   return;
+               }
+            }else{
+                //验证码过期
+                res.status(401).json({"message":"验证码已过期"});
+                return;
+            }
+        })
+    },
+    adminLogin:(req:Request,res:Response)=>{
+        const email=req.body.userEmail;
+        const password=req.body.userPassword;
+        if(!email && !password){
+            //账号或密码为空
+            res.status(401).json({"message":"账号或密码为空"});
+            return;
+        }
+        userModel.adminLogin(email,createHashPassword(password))
+          .then((value)=>{
+              if(value){
+                  setToken(res,email);
+                  res.status(201).json({"message":"登录成功"});
+                  return;
+              }else{
+                  res.status(401).json({"message":"账号或密码错误"});
+                  return;
+              }
+          })
+          .catch((err)=>{
+              logger.error('管理员登录失败');
+              res.status(401).json({"message":"账号或密码错误"});
+              return;
+          })
     }
+
 }

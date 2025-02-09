@@ -10,13 +10,13 @@ export function createUpload(savePath) {
         },
         filename: (req, file, callback) => {
             // 配置要保存的文件名
-            const saveFileName = req.body.userEmail;
+            const saveFileName = req.body.userEmail | ((new Date()).getTime());
             callback(null, saveFileName + path.extname(file.originalname));
         }
     });
     const upload = multer({
         storage,
-        limits: { fileSize: 1024 * 1024 * 5 }, // 可选限制文件大小
+        limits: { fileSize: 1024 * 1024 * 10 }, // 可选限制文件大小
         fileFilter(req, file, callback) {
             // 只允许上传图片类型
             const filetypes = /jpeg|jpg|png|gif/;

@@ -6,5 +6,6 @@
     "gutterpreview.imagePreviewMaxWidth": 500,
     "editor.fontFamily": "JetBrains Mono, MiSans,Inter",
     "editor.inlineSuggest.fontFamily": "JetBrains Mono",
-    "editor.inlineSuggest.showToolbar": "always"
+    "editor.inlineSuggest.showToolbar": "always",
+    "git.ignoreLimitWarning": true
 }

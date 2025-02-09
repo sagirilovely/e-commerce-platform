@@ -96,5 +96,5 @@ export default {
                 res.status(500).send(JSON.stringify({ message: "没有正常拿到商品列表" }));
             });
         }
-    }
+    },
 };
