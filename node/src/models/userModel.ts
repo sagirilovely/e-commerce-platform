@@ -10,6 +10,12 @@ interface UserInfo {
     created_time: Date|string;
     profile_photo: string;
 }
+interface MerchantInfo{
+    profile_photo:string;
+    nickname:string;
+    userEmail:string;
+    created_time:Date|string;
+}
 export default {
     updateUserTrolley: async (userEmail:string,goods_obj:object):Promise<boolean|undefined> => {
         try {
@@ -212,6 +218,31 @@ export default {
         }catch (err){
             logger.info('adminLogin' + err);
             return false;
+        }
+    },
+    getMerchantInfo:async (email:string):Promise<boolean|MerchantInfo>=>{
+        let merchantInfo:MerchantInfo={
+            userEmail:'',
+            profile_photo:'',
+            nickname:'',
+            created_time:''
+        };
+        try{
+            const [rows]=await promisePool.execute<RowDataPacket[]>(`
+                select profile_photo,nickname,created_time from merchants
+                where email = ? ;
+            `,[email])
+            if (rows.length===0){
+                return false;
+            }
+            merchantInfo.profile_photo=rows[0].profile_photo;
+            merchantInfo.nickname=rows[0].nickname;
+            merchantInfo.created_time=rows[0].created_time;
+            merchantInfo.userEmail=email;
+            return merchantInfo;
+        }catch (err){
+            logger.info('getMerchantInfo' + err);
+            return false
         }
     }
 }

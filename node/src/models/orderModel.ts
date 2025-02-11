@@ -1,7 +1,18 @@
 import promisePool from "./dbPool.js";
 import {ResultSetHeader, RowDataPacket} from "mysql2";
 import logger from "../dev/logger.js";
-
+interface OrderOfMerchant{
+    order_id: string|number|undefined|null;
+    title: string|undefined|null;
+    receiver_address: string|undefined|null;
+    logistics_information:string|undefined|null;
+    is_refund:string|number|boolean|undefined|null;
+    refund_reason:string|undefined|null;
+    is_refund_allowed:string|number|boolean|undefined|null;
+    is_paid:string|number|boolean|undefined|null;
+    goods_count:string|number|undefined|null;
+    created_time:string|undefined|null;
+}
 export default {
     getUserId: async (userEmail: string): Promise<string> => {
         try {
@@ -262,5 +273,103 @@ export default {
             logger.error("delOrder:" + err);
             return false;
         }
-    }
+    },
+    getOrdersOfMerchant:async (orderStatus:string,email:string):Promise<OrderOfMerchant[]|boolean>=>{
+      try{
+        if(orderStatus==='refund'){
+          const [rows]=await promisePool.execute<RowDataPacket[]>(`
+                select o.order_id,p.title,o.receiver_address,o.logistics_information
+                        ,o.is_refund,o.refund_reason,o.is_refund_allowed,o.is_paid,o.goods_count,
+                       o.created_time
+                from orders as o
+                         join products as p
+                              on o.goods_id=p.goods_id
+                where o.merchant_id = (
+                    select merchant_id
+                    from merchants
+                    where email = ?
+                ) and o.is_refund= 1 ;
+            `,[email])
+          if(rows.length){
+            return rows as OrderOfMerchant[];
+          }else{
+            return false;
+          }
+        }else{
+          const [rows]=await promisePool.execute<RowDataPacket[]>(`
+                select o.order_id,p.title,o.receiver_address,o.logistics_information
+                        ,o.is_refund,o.refund_reason,o.is_refund_allowed,o.is_paid,o.goods_count,
+                       o.created_time
+                from orders as o
+                         join products as p
+                              on o.goods_id=p.goods_id
+                where o.merchant_id = (
+                    select merchant_id
+                    from merchants
+                    where email = ?
+                )
+            `,[email])
+          if(rows.length){
+            return rows as OrderOfMerchant[];
+          }else{
+            return false;
+          }
+        }
+      }catch (err){
+        logger.error("getOrdersOfMerchant:"+err);
+        return false;
+      }
+},
+    updateLogistics:async (order_id:string,logistics_information:string):Promise<boolean>=>{
+        try{
+            const [rows]=await promisePool.execute<ResultSetHeader>(`
+                update orders
+                set logistics_information = ? 
+                where order_id = ? ;
+            `,[logistics_information,order_id]);
+            return rows.affectedRows === 1;
+
+        }catch (err){
+            logger.error("updateLogistics:"+err);
+            return false;
+        }
+    },
+  updateRefund:async (order_id:string):Promise<boolean>=>{
+      try{
+        const [rows]=await promisePool.execute<ResultSetHeader>(`
+          update orders
+          set is_refund_allowed = 1
+          where order_id = ? ;
+        `,[order_id])
+        return rows.affectedRows === 1;
+      }catch (err){
+        logger.error("updateRefund:"+err);
+        return false;
+      }
+  },
+  delOrderByMerchant:async (order_id:string):Promise<boolean>=>{
+      try{
+        const [rows]=await promisePool.execute<RowDataPacket[]>(`
+          select created_time,is_paid
+              from orders
+          where order_id = ? ;
+        `,[order_id])
+        if(rows.length){
+          const orderCreateTime:string=String(rows[0].created_time);
+          if((((Number(new Date())-Number(new Date(orderCreateTime)))/1000/60/60) > 24 )&&( rows[0].is_paid=== 0)){
+            const [rows1]=await promisePool.execute<ResultSetHeader>(`
+              delete from orders
+              where order_id = ?;
+            `,[order_id])
+            if(rows1.affectedRows===1){
+              return true;
+            }
+          }
+        }
+        return false;
+      }catch (err){
+        logger.error("delOrderByMerchant:"+err);
+        return false;
+      }
+  }
 };

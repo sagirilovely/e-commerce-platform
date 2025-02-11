@@ -44,5 +44,48 @@ export default {
         }).catch((err) => {
             res.status(500).json({ message: "服务器出错" });
         });
+    },
+    getCommentsOfMerchant: (req, res) => {
+        const email = res.userEmail;
+        if (!email) {
+            // 未登录
+            res.status(500).json({ message: "未登录" });
+            return;
+        }
+        commentsModel.getCommentsOfMerchant(email)
+            .then((value) => {
+            if (!value) {
+                res.status(403).json({ message: "获取评论失败" });
+                return;
+            }
+            res.status(200).json({ message: "获取评论成功", data: value });
+        })
+            .catch((err) => {
+            res.status(500).json({ message: "获取评论失败" });
+        });
+    },
+    addReply: (req, res) => {
+        const commentId = String(req.body.comment_id);
+        const reply = String(req.body.reply);
+        const email = res.userEmail;
+        if (!email || !commentId || !reply) {
+            res.status(403).json({ message: "添加回复失败" });
+            return;
+        }
+        commentsModel.addReply(commentId, reply)
+            .then((value) => {
+            if (value) {
+                res.status(200).json({ message: "回复成功" });
+                return;
+            }
+            else {
+                res.status(500).json({ message: "回复失败" });
+                return;
+            }
+        })
+            .catch((err) => {
+            res.status(500).json({ message: "回复失败" });
+            return;
+        });
     }
 };

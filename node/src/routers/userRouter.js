@@ -12,4 +12,6 @@ routers.patch('/password', userController.updatePassword);
 routers.patch('/profile', userUpload.single("userProfile"), userController.updateUserProfile);
 routers.get('/info', userController.getUserInfo);
 routers.patch('/nikename', userController.updateUserNikename);
+routers.get('/merchant', userController.getMerchantInfo);
+routers.patch('/merchant', userController.logoutMerchant);
 export default routers;

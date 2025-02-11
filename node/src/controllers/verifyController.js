@@ -273,7 +273,7 @@ export default {
         userModel.adminLogin(email, createHashPassword(password))
             .then((value) => {
             if (value) {
-                setToken(res, email);
+                setToken(res, email, false, true);
                 res.status(201).json({ "message": "登录成功" });
                 return;
             }

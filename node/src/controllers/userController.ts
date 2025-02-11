@@ -5,6 +5,7 @@ import sendNewCode from "../util/sendNewCode.js";
 import jwt from "jsonwebtoken";
 import configMessage from "../dev/nodeConfig.js";
 import createHashPassword from "../util/createHashPassword.js";
+import setToken from '../util/setToken.js'
 const {secret}=configMessage.authentication;
 export default {
  updateUserTrolley:(req:Request,res:Response)=>{
@@ -290,6 +291,40 @@ export default {
                     message:"修改失败"
                 })
             })
+    },
+  getMerchantInfo:(req:Request,res:Response)=>{
+    if(!res.userEmail){
+        res.status(500).json({message:"商家信息获取失败"})
+      return;
     }
+    userModel.getMerchantInfo(res.userEmail)
+      .then((value)=>{
+        if(value){
+          res.status(200).json({
+            message:"获取商家信息成功",
+            data:value
+          })
+          return;
+        }else{
+          res.status(500).json({message:"商家信息获取失败"});
+          return;
+        }
+      })
+      .catch((err)=>{
+        logger.error(err)
+        res.status(500).json({message:"商家信息获取失败"});
+        return;
+      })
+  },
+  logoutMerchant:(req:Request,res:Response)=>{
+    const email=res.userEmail;
+    if(!email){
+      res.status(500).json({message:"未登录"});
+      return;
+    }
+    //将token里面的authentication置空
+    setToken(res,email,true);
+    res.status(200).json({message:"退出成功"});
+}
 
 }

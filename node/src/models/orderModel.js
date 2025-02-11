@@ -235,5 +235,109 @@ export default {
             logger.error("delOrder:" + err);
             return false;
         }
+    },
+    getOrdersOfMerchant: async (orderStatus, email) => {
+        try {
+            if (orderStatus === 'refund') {
+                const [rows] = await promisePool.execute(`
+                select o.order_id,p.title,o.receiver_address,o.logistics_information
+                        ,o.is_refund,o.refund_reason,o.is_refund_allowed,o.is_paid,o.goods_count,
+                       o.created_time
+                from orders as o
+                         join products as p
+                              on o.goods_id=p.goods_id
+                where o.merchant_id = (
+                    select merchant_id
+                    from merchants
+                    where email = ?
+                ) and o.is_refund= 1 ;
+            `, [email]);
+                if (rows.length) {
+                    return rows;
+                }
+                else {
+                    return false;
+                }
+            }
+            else {
+                const [rows] = await promisePool.execute(`
+                select o.order_id,p.title,o.receiver_address,o.logistics_information
+                        ,o.is_refund,o.refund_reason,o.is_refund_allowed,o.is_paid,o.goods_count,
+                       o.created_time
+                from orders as o
+                         join products as p
+                              on o.goods_id=p.goods_id
+                where o.merchant_id = (
+                    select merchant_id
+                    from merchants
+                    where email = ?
+                )
+            `, [email]);
+                if (rows.length) {
+                    return rows;
+                }
+                else {
+                    return false;
+                }
+            }
+        }
+        catch (err) {
+            logger.error("getOrdersOfMerchant:" + err);
+            return false;
+        }
+    },
+    updateLogistics: async (order_id, logistics_information) => {
+        try {
+            const [rows] = await promisePool.execute(`
+                update orders
+                set logistics_information = ? 
+                where order_id = ? ;
+            `, [logistics_information, order_id]);
+            return rows.affectedRows === 1;
+        }
+        catch (err) {
+            logger.error("updateLogistics:" + err);
+            return false;
+        }
+    },
+    updateRefund: async (order_id) => {
+        try {
+            const [rows] = await promisePool.execute(`
+          update orders
+          set is_refund_allowed = 1
+          where order_id = ? ;
+        `, [order_id]);
+            return rows.affectedRows === 1;
+        }
+        catch (err) {
+            logger.error("updateRefund:" + err);
+            return false;
+        }
+    },
+    delOrderByMerchant: async (order_id) => {
+        try {
+            const [rows] = await promisePool.execute(`
+          select created_time,is_paid
+              from orders
+          where order_id = ? ;
+        `, [order_id]);
+            if (rows.length) {
+                const orderCreateTime = String(rows[0].created_time);
+                if ((((Number(new Date()) - Number(new Date(orderCreateTime))) / 1000 / 60 / 60) > 24) && (rows[0].is_paid === 0)) {
+                    const [rows1] = await promisePool.execute(`
+              delete from orders
+              where order_id = ?;
+            `, [order_id]);
+                    if (rows1.affectedRows === 1) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+        catch (err) {
+            logger.error("delOrderByMerchant:" + err);
+            return false;
+        }
     }
 };

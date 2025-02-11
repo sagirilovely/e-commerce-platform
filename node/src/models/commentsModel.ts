@@ -2,6 +2,14 @@ import promisePool from "./dbPool.js";
 import {ResultSetHeader, RowDataPacket} from "mysql2";
 import logger from "../dev/logger.js";
 
+interface Comments{
+    comment_id: number|string;
+    purchaser_nickname: string;
+    merchant_nickname: string;
+    purchaser_comment: string;
+    merchant_reply: string;
+    goods_grade: number|string;
+}
 export default {
     getCommentsOfGoods: async (goods_id: string): Promise<object | undefined> => {
         try {
@@ -76,5 +84,83 @@ export default {
             logger.info("addComments" + err);
             return false;
         }
-    }
+    },
+    getCommentsOfMerchant:async (email:string):Promise<Comments[]|boolean>=>{
+        try{
+            //1.通过商家email查出他的id 和 昵称
+            const [rows] = await promisePool.execute<RowDataPacket[]>(`
+                select merchants.merchant_id,merchants.nickname from merchants
+                where email = ? ;
+            `,[email])
+            if(!rows.length){
+                return false;
+            }
+            const merchant_id = rows[0].merchant_id;
+            const merchant_nickname = rows[0].nickname;
+            //2.通过商家id查出该商家的评论
+            const [rows1] = await promisePool.execute<RowDataPacket[]>(`
+                select comment_id,purchaser_id,purchaser_comment,merchant_reply,goods_grade from comments
+                where merchant_id = ?;
+            `,[merchant_id]);
+            if(!rows1.length){
+                return false;
+            }
+            //3.遍历评论列表,根据购买者id去查询他的昵称,并向rows1中加入购买者昵称 删除purchaser_id
+            for(let comment of rows1){
+                const [rows2] = await promisePool.execute<RowDataPacket[]>(`
+                    select nickname from purchasers
+                    where purchaser_id = ? ;
+                `,[comment.purchaser_id])
+                if(!rows2.length){
+                   return false;
+                }
+                comment.purchaser_nikename = rows2[0].nickname;
+                delete comment.purchaser_id;
+            }
+            //4.返回评论列表
+            let commentsList:Comments[]=[];
+            for(let comment of rows1){
+                commentsList.push({
+                    comment_id:comment.comment_id,
+                    purchaser_nickname:comment.purchaser_nikename,
+                    merchant_nickname:merchant_nickname,
+                    purchaser_comment:comment.purchaser_comment,
+                    merchant_reply:comment.merchant_reply,
+                    goods_grade:comment.goods_grade
+                })
+            }
+            return commentsList;
+        }
+        catch(err){
+            logger.error("getCommentsOfMerchant" + err);
+            return false;
+        }
+    },
+    addReply:async (commentId:string,reply:string):Promise<boolean>=>{
+        //1.通过commentId查询该评论信息
+        try{
+            const [rows] = await promisePool.execute<RowDataPacket[]>(`
+                select * from comments
+                where  comment_id = ? ;
+            `,[commentId])
+            if(!rows.length){
+                return false;//该id没有对应的评论信息
+            }
+            //2.更新该条评论信息
+            if(rows[0].merchant_reply){
+                return false;//已经评价过了
+            }
+           const[rows1]= await promisePool.execute<ResultSetHeader>(`
+                update comments
+                set merchant_reply = ?
+                where comment_id = ?;
+            `,[reply,commentId])
+            return rows1.affectedRows > 0;
+
+        }
+        catch (err){
+            logger.error("addReply" + err);
+            return false;
+        }
+}
 }

@@ -8,4 +8,8 @@ routers.patch('/delivery', orderController.deliveryOrder);
 routers.get('/detail', orderController.getOrderDetail);
 routers.get('/summary', orderController.getOrderSummary);
 routers.delete('/', orderController.delOrder);
+routers.get('/merchant', orderController.getOrdersOfMerchant);
+routers.patch('/merchant/logistics', orderController.updateLogistics);
+routers.patch('/merchant/refund', orderController.updateRefund);
+routers.delete('/merchant', orderController.delOrderByMerchant);
 export default routers;

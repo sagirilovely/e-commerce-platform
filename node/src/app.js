@@ -29,7 +29,7 @@ app.use('/', cors({
         }
     },
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], // 允许的 HTTP 方法
-    allowedHeaders: ['Content-Type', 'authentication', 'credentials'], // 允许的请求头
+    allowedHeaders: ['Content-Type', 'authentication', 'credentials', 'adminToken'], // 允许的请求头
     credentials: true, // 是否允许发送凭证（如 Cookies）
 }));
 //配置静态资源
