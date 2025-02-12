@@ -92,5 +92,35 @@ export default {
                 })
         }
     },
+    searchGoods:(req:Request,res:Response)=>{
+        const keyword = String(req.query.keyword);
+        const offset = String (req.query.offset);
+        const email=res.userEmail;
+        if(keyword && offset){
+            goodsModel.searchGoods(keyword,offset,email)
+              .then((value)=>{
+                  if(value){
+                      res.status(200).json({
+                          message:"商品列表已返回",
+                          data:value
+                      })
+                  }else{
+                      res.status(404).json({
+                          message:"商品已加载完毕"
+                      })
+                  }
+              })
+              .catch((err)=>{
+                  res.status(500).json({
+                      message:"没有正常拿到商品列表"
+                  })
+              })
+        }else{
+            res.status(404).json({
+                message:"商品已加载完毕"
+            })
+            return;
+        }
+    }
 
 }

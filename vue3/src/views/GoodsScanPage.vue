@@ -1,6 +1,7 @@
 <template>
   <div>
-    <TopBanner></TopBanner>
+    <TopBanner>
+    </TopBanner>
     <div class="container">
       <div
         :style="{
@@ -11,6 +12,12 @@
         class="goods-list"
         @scroll="goodsListScroll($event)"
       >
+        <a-input-search
+          v-model:value="keyword"
+          placeholder="搜索您想要的商品"
+          enter-button
+          @search="onSearch"
+        />
         <CategoryNavigationBar></CategoryNavigationBar>
         <GoodsDetail
           v-for="item in goodsList"
@@ -43,6 +50,7 @@ const { token } = useToken()
 const offset = ref(0)
 const isRecommend = ref(true)
 const category = computed(()=>useGoods().category)
+const keyword=ref('');
 watch(category,(newVal)=>{
   isRecommend.value = (newVal === '推荐');
   //清空列表
@@ -64,22 +72,32 @@ const goodsListScroll = (event: Event) => {
    const timer= setTimeout(()=>{
       offset.value += 10
       clearTimeout(timer)
-    },500)
+    },100)
   }
 }
 onMounted(() => {
   getGoodsList()
 })
 watch(offset, () => {
-  getGoodsList()
+  if(useGoods().isSearch){
+    getGoodsList(true)
+  }else{
+    getGoodsList()
+  }
 })
 watch(category, () => {
   getGoodsList()
 })
 
-function getGoodsList() {
+function getGoodsList(isSearch:boolean=false) {
+  let getUrl:string=``;
+  if(isSearch){
+    getUrl=`/goods/search?offset=${offset.value}&keyword=${keyword.value}`
+  }else{
+    getUrl=`/goods/list?offset=${offset.value}&recommend=${isRecommend.value}&category=${category.value}`
+  }
   eFetch(
-    `/goods/list?offset=${offset.value}&recommend=${isRecommend.value}&category=${category.value}`,
+    getUrl,
     'GET',
   )
     .then((res) => {
@@ -94,6 +112,11 @@ function getGoodsList() {
     .catch((err) => {
       console.log(err)
     })
+}
+function onSearch(){
+  goodsList.splice(0, goodsList.length);
+  useGoods().isSearch=true;
+  getGoodsList(true);
 }
 
 defineOptions({

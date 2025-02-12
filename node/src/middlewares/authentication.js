@@ -39,7 +39,17 @@ function verifyToken(req, res, next) {
     // 获取客户端请求的路径
     const requested = req.url.split('/')[1]; // 这里可以拿到 "api/v1/" 后面的部分
     if (requested === 'verify' || requested === 'goods') {
-        next(); //如果客户端在请求注册或登录,则直接放行
+        const token = req.cookies['authentication']; //从cookies中取出authentication
+        jwt.verify(token, secret, (error, decoded) => {
+            //如果userEmail存在,则写入res
+            if (error) {
+                next(); //如果客户端在请求注册或登录,则直接放行
+            }
+            else {
+                res.userEmail = decoded.userEmail;
+                next(); //如果客户端在请求注册或登录,则直接放行
+            }
+        });
     }
     else if (requested === 'admin') {
         updateToken(req, res, next, 'adminToken');

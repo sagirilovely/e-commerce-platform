@@ -4,7 +4,8 @@ const useGoods = defineStore('goods',{
     state:()=>{
       return {
         category:'其他',
-        selectedGoodsId:''
+        selectedGoodsId:'',
+        isSearch:false
       }
     }
 })

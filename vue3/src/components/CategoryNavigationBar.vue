@@ -24,6 +24,7 @@ for(const item of itemsList) {
 }
 function setDetailGoods(menuItem: MenuProps){
   useGoods().category=<string>menuItem.key;
+  useGoods().isSearch=false;
 }
 </script>
 <style scoped>

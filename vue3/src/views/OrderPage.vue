@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="order-page">
     <a-row :gutter="24" class="container">
       <!-- 订单列表 -->
       <a-col :span="12">
@@ -373,17 +373,19 @@ onActivated(() => {
 </script>
 
 <style scoped>
-.container {
+.container{
   padding: 24px;
   overflow: hidden;
 }
-
+.order-page{
+  overflow: hidden;
+}
 .order-card,
-.detail-card {
+.detail-card{
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   height: 650px;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 
 .order-item {
