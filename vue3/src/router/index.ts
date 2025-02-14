@@ -11,6 +11,10 @@ import {message} from 'ant-design-vue'
 import ShoppingTrolleyPage from '@/views/ShoppingTrolleyPage.vue'
 import UserInfo from '@/views/UserInfo.vue'
 import OrderPage from '@/views/OrderPage.vue'
+import MerchantVerify from '@/views/MerchantVerify.vue';
+import AdminVerify from '@/views/AdminVerify.vue';
+import MerchantDashboard from '@/views/MerchantDashboard.vue'
+import AdminDashboard from '@/views/AdminDashboard.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -68,6 +72,26 @@ const router = createRouter({
         }
       ]
     },
+    {
+      path:'/merchant/verify',
+      component: MerchantVerify,
+      name:'merchantVerify',
+    },
+    {
+      path:'/merchant/dashboard',
+      component: MerchantDashboard,
+      name:'merchantDashboard',
+    },
+    {
+      path:'/admin/verify',
+      component:AdminVerify,
+      name:'adminVerify',
+    },
+    {
+      path:'/admin/dashboard',
+      component:AdminDashboard,
+      name:'adminDashboard',
+    }
   ],
 })
 

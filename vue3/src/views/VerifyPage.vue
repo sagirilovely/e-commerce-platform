@@ -21,6 +21,11 @@
         href: '#register',
         title: '注册账号',
       },
+      {
+        key:'merchantVerify',
+        href: '#merchantVerify',
+        title: '商家登录',
+      }
     ]"
         @click="handleClick"
       />
@@ -47,9 +52,14 @@ const background = backgroundImg
 //导航栏点击事件
 const handleClick: AnchorProps['onClick'] = (e, link) => {
   e.preventDefault();
+  const pageName=link.href.split('#')[1]
+  let isReplace=true;
+  if(pageName==='merchantVerify'){
+    isReplace=false;
+  }
   router.push({
-    name:link.href.split('#')[1],
-    replace: true
+    name:pageName,
+    replace: isReplace
   })
 };
 
