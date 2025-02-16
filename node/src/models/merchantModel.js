@@ -71,5 +71,31 @@ export default {
             logger.error('updateMerchantGoods' + err);
             return false;
         }
+    },
+    deleteMerchantGoods: async (goods_id) => {
+        try {
+            const [rows] = await promisePool.execute(`
+        delete from products
+        where goods_id = ? ;
+      `, [goods_id]);
+            return rows.affectedRows === 1;
+        }
+        catch (err) {
+            logger.error('deleteMerchantGoods:' + err);
+            return false;
+        }
+    },
+    addMerchantGoods: async (goodsInfo, email) => {
+        try {
+            const [rows] = await promisePool.execute(`
+            insert into products (title,img_big_logo,img_small_logo,price,current_price,goods_number,goods_introduce,category,merchant_id)
+                values (?,?,?,?,?,?,?,?,(select merchant_id from merchants where email = ? ));
+        `, [goodsInfo.title, goodsInfo.img_big_logo, goodsInfo.img_small_logo, goodsInfo.price, goodsInfo.current_price, goodsInfo.goods_number, goodsInfo.goods_introduce, goodsInfo.category, email]);
+            return (rows.affectedRows === 1);
+        }
+        catch (err) {
+            logger.error('addMerchantGoods' + err);
+            return false;
+        }
     }
 };

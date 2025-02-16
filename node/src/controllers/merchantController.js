@@ -12,7 +12,7 @@ export default {
             merchantModel.getGoodsOfMerchant(email, offset)
                 .then((value) => {
                 if (value === false) {
-                    res.status(401).send(JSON.stringify({ message: "该商家还没有商品" }));
+                    res.status(500).send(JSON.stringify({ message: "该商家还没有商品" }));
                     return;
                 }
                 else {
@@ -21,7 +21,7 @@ export default {
                 }
             })
                 .catch((err) => {
-                res.status(401).send(JSON.stringify({ message: "获取失败" }));
+                res.status(500).send(JSON.stringify({ message: "获取失败" }));
                 return;
             });
         }
@@ -60,6 +60,60 @@ export default {
             .catch((err) => {
             res.status(500).send(JSON.stringify({ message: "更新失败" }));
             return;
+        });
+    },
+    addMerchantGoods: (req, res) => {
+        //从req接收商品信息
+        const goodsInfo = {
+            goods_id: String(1),
+            title: String(req.body.title),
+            img_big_logo: String(req.body.img_big_logo),
+            img_small_logo: String(req.body.img_small_logo),
+            price: String(req.body.price),
+            current_price: String(req.body.current_price),
+            goods_number: String(req.body.goods_number),
+            goods_introduce: String(req.body.goods_introduce),
+            category: String(req.body.category)
+        };
+        const email = String(res.userEmail);
+        merchantModel.addMerchantGoods(goodsInfo, email)
+            .then((value) => {
+            if (value) {
+                res.status(200).json({
+                    message: '成功'
+                });
+            }
+            else {
+                res.status(500).json({
+                    message: "失败"
+                });
+            }
+        })
+            .catch((err) => {
+            res.status(500).json({
+                message: "失败"
+            });
+        });
+    },
+    deleteMerchantGoods: (req, res) => {
+        const goods_id = String(req.query.goods_id);
+        merchantModel.deleteMerchantGoods(goods_id)
+            .then((value) => {
+            if (value) {
+                res.status(200).json({
+                    message: '删除成功'
+                });
+            }
+            else {
+                res.status(500).json({
+                    message: "删除失败"
+                });
+            }
+        })
+            .catch((err) => {
+            res.status(500).json({
+                message: "删除失败"
+            });
         });
     },
     imgConvert: (req, res) => {
