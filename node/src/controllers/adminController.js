@@ -1,5 +1,7 @@
 import logger from "../dev/logger.js";
 import configMessage from "../dev/nodeConfig.js";
+import createHashPassword from "../util/createHashPassword.js";
+import setToken from '../util/setToken.js';
 import adminModel from '../models/adminModel.js';
 const { secret } = configMessage.authentication;
 export default {
@@ -66,8 +68,8 @@ export default {
     },
     getGoodsInfo: (req, res) => {
         //查询商品
-        const goods_title = String(req.body.goods_title);
-        const offset = String(req.body.offset);
+        const goods_title = String(req.query.goods_title);
+        const offset = String(req.query.offset);
         adminModel.getGoodsInfo(goods_title, offset)
             .then((value) => {
             if (value) {
@@ -193,7 +195,7 @@ export default {
             return;
         }
         const admin_email = req.body.admin_email;
-        const password = req.body.password;
+        let password = req.body.password;
         const nickname = req.body.nickname;
         if (!admin_email || !password) {
             res.status(500).json({
@@ -201,6 +203,7 @@ export default {
             });
             return;
         }
+        password = createHashPassword(password);
         adminModel.createAdmin(admin_email, password, nickname)
             .then((value) => {
             if (value) {
@@ -222,7 +225,7 @@ export default {
         });
     },
     deleteAdmin: (req, res) => {
-        const admin_id = String(req.body.admin_id);
+        const admin_id = String(req.query.admin_id);
         if (!admin_id) {
             res.status(500).json({
                 message: "删除失败"
@@ -249,5 +252,15 @@ export default {
                 });
             }
         });
+    },
+    logout: (req, res) => {
+        const email = res.userEmail;
+        if (!email) {
+            res.status(500).json({ message: "未登录" });
+            return;
+        }
+        //将token里面的authentication置空
+        setToken(res, email, true, true);
+        res.status(200).json({ message: "退出成功" });
     }
 };

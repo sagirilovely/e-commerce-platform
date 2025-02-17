@@ -10,4 +10,5 @@ routers.patch('/purchaser', adminController.updatePurchaserInfo);
 routers.get('/admin', adminController.getAdminInfo);
 routers.patch('/admin', adminController.addAdminInfo);
 routers.delete('/admin', adminController.deleteAdmin);
+routers.get('/logout', adminController.logout);
 export default routers;

@@ -8,7 +8,7 @@
       <!-- 主题切换 -->
       <a-float-button
         type="default"
-        :style="{ left: '24px', bottom: '24px' }"
+        :style="{ left: '20px', bottom: '300px' }"
         @click="handleClick"
       >
         <template #icon>

@@ -22,13 +22,13 @@ export default {
     getGoodsInfo: async (goods_title, offset) => {
         try {
             const [rows] = await promisePool.execute(`
-        SELECT p.title as title, p.current_price as current_price, m.nickname as merchant
+        SELECT p.title as title, p.current_price as current_price, m.nickname as merchant ,p.goods_id
         FROM products p
         JOIN merchants m ON p.merchant_id = m.merchant_id
         where p.title like concat('%',?,'%')
-        limit ?,10
+        limit ?,10;
     `, [goods_title, offset]);
-            if (rows.length) {
+            if (rows.length >= 1) {
                 return rows;
             }
             else {
